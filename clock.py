@@ -27,7 +27,7 @@ class clock_area(Gtk.DrawingArea):
             self.queue_draw()
             return True
         self.add_tick_callback(tick_callback)
-        
+
     def on_draw(self, area, cr):
         aw = area.get_allocated_width()
         ah = area.get_allocated_height()
@@ -52,6 +52,11 @@ class clock_area(Gtk.DrawingArea):
         cr.set_line_width(line_width)
         cr.arc(0.0, 0.0, rad, 0.0, 2.0 * math.pi)
         cr.stroke()
+
+        # center
+        cr.set_line_width(line_width)
+        cr.arc(0.0, 0.0, 0.02 * rad, 0.0, 2.0 * math.pi)
+        cr.fill()
 
         now = datetime.datetime.now()
 
