@@ -14,19 +14,20 @@ def rotation2d(theta):
                      [sin,  cos]])
 
 
-class clock_area(Gtk.Frame):
+class clock_area(Gtk.DrawingArea):
     def __init__(self, css=None, border_width=0):
         super().__init__()
-        self.set_border_width(border_width)
-        self.set_size_request(100, 100)
         self.vexpand = True
         self.hexpand = True
         self.surface = None
 
-        self.area = Gtk.DrawingArea()
-        self.add(self.area)
+        self.connect("draw", self.on_draw)
 
-        self.area.connect("draw", self.on_draw)
+        def tick_callback(self, ptr):
+            self.queue_draw()
+            return True
+        self.add_tick_callback(tick_callback)
+        
 
     def on_draw(self, area, cr):
         aw = area.get_allocated_width()
