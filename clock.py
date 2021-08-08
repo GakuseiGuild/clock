@@ -26,11 +26,16 @@ class DrawingAreaFrame(Gtk.Frame):
         ah = area.get_allocated_height()
 
         line_width = 5.0
-        rad = min(aw, ah) / 2.0 - line_width
+        rad = 100.0
+        field_width = 2.0 * (rad + line_width)
+        field_height = 2.0 * (rad + line_width)
+
+        coef = min(aw / field_width, ah / field_height)
+        cr.transform(cairo.Matrix(coef, 0, 0, -coef, coef * field_width / 2.0, coef * field_height / 2.0))
     
         cr.set_line_width(line_width)
         cr.set_source_rgb(1.0, 1.0, 1.0)
-        cr.arc(rad + line_width, rad + line_width, rad, 0, 2 * math.pi)
+        cr.arc(0.0, 0.0, rad, 0.0, 2 * math.pi)
         cr.stroke()
         return False
  
