@@ -1,10 +1,10 @@
-from gi.repository import Gtk
 import numpy as np
 import math
 import cairo
 import datetime
 import gi
 gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk  # nopep8
 
 
 def rotation2d(theta):
@@ -42,7 +42,8 @@ class clock_area(Gtk.Frame):
                      field_width / 2.0, coef * field_height / 2.0))
 
         cr.set_source_rgb(1.0, 1.0, 1.0)
-        cr.rectangle(-field_width / 2.0, -field_height / 2.0, field_width, field_height)
+        cr.rectangle(-field_width / 2.0, -field_height /
+                     2.0, field_width, field_height)
         cr.fill()
 
         cr.set_source_rgb(0.0, 0.0, 0.0)
