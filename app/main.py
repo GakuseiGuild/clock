@@ -5,7 +5,7 @@ import time
 import threading
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from src.clock import clock  # nopep8
-from src.gui import clock as clock_gui  # nopep8
+from src.gui import clock as gui  # nopep8
 
 
 def clk_main(clk):
@@ -17,7 +17,7 @@ def clk_main(clk):
 def main():
     clk = clock.Clock()
 
-    win = clock_gui.Window(clk)
+    win = gui.Window(clk)
 
     threads = []
     threads.append(threading.Thread(name="gui", target=win.main))
