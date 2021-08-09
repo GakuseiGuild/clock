@@ -2,21 +2,20 @@ import numpy as np
 import math
 import os
 import cairo
-import datetime
 import gi
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, Gdk, GdkPixbuf  # nopep8
+from gi.repository import Gtk  # nopep8
 
 
-def rotation2d(theta):
-    cos = np.cos(theta)
-    sin = np.sin(theta)
+def rotation2d(dir):
+    cos = np.cos(dir)
+    sin = np.sin(dir)
     return np.array([[cos, -sin],
                      [sin,  cos]])
 
 
-class clock_area(Gtk.DrawingArea):
-    def __init__(self, css=None, border_width=0):
+class ClockArea(Gtk.DrawingArea):
+    def __init__(self, clk):
         super().__init__()
         self.vexpand = True
         self.hexpand = True
@@ -28,6 +27,8 @@ class clock_area(Gtk.DrawingArea):
             self.queue_draw()
             return True
         self.add_tick_callback(tick_callback)
+
+        self.clk = clk
 
     def on_draw(self, area, cr):
         aw = area.get_allocated_width()
@@ -53,10 +54,6 @@ class clock_area(Gtk.DrawingArea):
         cr.transform(cairo.Matrix(coef, 0, 0, -coef, coef *
                      field_width / 2.0, coef * field_height / 2.0))
 
-        # cr.set_source_rgb(1.0, 1.0, 1.0)
-        # cr.arc(0.0, 0.0, rad, 0.0, 2.0 * math.pi)
-        # cr.fill()
-
         cr.set_source_rgb(0.0, 0.0, 0.0)
 
         # circle
@@ -64,38 +61,34 @@ class clock_area(Gtk.DrawingArea):
         cr.arc(0.0, 0.0, rad, 0.0, 2.0 * math.pi)
         cr.stroke()
 
-        now = datetime.datetime.now()
+        target_long = np.dot(rotation2d(self.clk.dir_long),
+                             np.array([0.9 * rad, 0.0]))
+        target_short = np.dot(rotation2d(self.clk.dir_short),
+                              np.array([0.5 * rad, 0.0]))
 
         # long hand
-        target = np.dot(rotation2d(- (now.minute / 60.0) *
-                        2.0 * math.pi), np.array([0.0, 0.9 * rad]))
         cr.set_line_width(0.25 * line_width)
         cr.move_to(0, 0)
-        cr.line_to(target[0], target[1])
+        cr.line_to(target_long[0], target_long[1])
         cr.stroke()
 
         # short hand
-        target = np.dot(rotation2d(-((now.hour % 12) / 12) *
-                        2.0 * math.pi - (now.minute / 60.0) * math.pi / 12.0), np.array([0.0, 0.5 * rad]))
         cr.set_line_width(0.5 * line_width)
         cr.move_to(0, 0)
-        cr.line_to(target[0], target[1])
+        cr.line_to(target_short[0], target_short[1])
         cr.stroke()
         return False
 
 
-class window(Gtk.Window):
-    def __init__(self):
+class Window(Gtk.Window):
+    def __init__(self, clk):
         Gtk.Window.__init__(self)
         self.set_title("clock")
         self.set_default_size(800, 600)
         self.connect("destroy", Gtk.main_quit)
 
-        ca = clock_area()
+        ca = ClockArea(clk)
         self.add(ca)
 
-
-def run_gui():
-    win = window()
-    win.show_all()
-    Gtk.main()
+    def main(self):
+        Gtk.main()
