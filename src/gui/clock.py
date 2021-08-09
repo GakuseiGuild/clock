@@ -1,5 +1,6 @@
 import numpy as np
 import math
+import os
 import cairo
 import datetime
 import gi
@@ -37,7 +38,8 @@ class clock_area(Gtk.DrawingArea):
         field_width = 2.0 * (rad + line_width)
         field_height = 2.0 * (rad + line_width)
 
-        img = cairo.ImageSurface.create_from_png("clock.png")
+        img = cairo.ImageSurface.create_from_png(
+            os.path.dirname(__file__) + "/assets/clock.png")
         coef = min(aw / (img.get_width() + 2.0 * line_width),
                    ah / (img.get_height() + 2.0 * line_width))
         cr.identity_matrix()
@@ -93,6 +95,7 @@ class window(Gtk.Window):
         self.add(ca)
 
 
-window = window()
-window.show_all()
-Gtk.main()
+def run_gui():
+    win = window()
+    win.show_all()
+    Gtk.main()
