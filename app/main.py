@@ -9,9 +9,12 @@ from src.gui import clock as gui  # nopep8
 
 
 def clk_main(clk):
+    cycle = 1.0 / 60.0
     while True:
+        start = time.time()
         clk.set_now()
-        time.sleep(1.0 / 60.0)
+
+        time.sleep(max(0.0, cycle - (time.time() - start)))
 
 
 def main():
