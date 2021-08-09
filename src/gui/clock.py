@@ -89,6 +89,7 @@ class Window(Gtk.Window):
 
         ca = ClockArea(clk)
         self.add(ca)
+        self.show_all()
 
     def main(self):
         Gtk.main()

@@ -20,7 +20,6 @@ def main():
                 (now.minute / 60.0) * math.pi / 12.0 + math.pi / 2.0
 
     win = clock_gui.Window(clk)
-    win.show_all()
 
     threads = []
     threads.append(threading.Thread(target=win.main))
