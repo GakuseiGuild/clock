@@ -4,7 +4,7 @@ import cairo
 import datetime
 import gi
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk  # nopep8
+from gi.repository import Gtk, Gdk, GdkPixbuf  # nopep8
 
 
 def rotation2d(theta):
@@ -37,14 +37,21 @@ class clock_area(Gtk.DrawingArea):
         field_width = 2.0 * (rad + line_width)
         field_height = 2.0 * (rad + line_width)
 
+        img = cairo.ImageSurface.create_from_png("clock.png")
+        coef = min(aw / (img.get_width() + 2.0 * line_width), ah / (img.get_height() + 2.0 * line_width))
+        cr.scale(coef, coef)
+        cr.translate(line_width, line_width)
+        cr.set_source_surface(img)
+        cr.paint()
+
+        cr.identity_matrix()
         coef = min(aw / field_width, ah / field_height)
         cr.transform(cairo.Matrix(coef, 0, 0, -coef, coef *
                      field_width / 2.0, coef * field_height / 2.0))
 
-        cr.set_source_rgb(1.0, 1.0, 1.0)
-        cr.rectangle(-field_width / 2.0, -field_height /
-                     2.0, field_width, field_height)
-        cr.fill()
+        # cr.set_source_rgb(1.0, 1.0, 1.0)
+        # cr.arc(0.0, 0.0, rad, 0.0, 2.0 * math.pi)
+        # cr.fill()
 
         cr.set_source_rgb(0.0, 0.0, 0.0)
 
