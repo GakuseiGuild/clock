@@ -13,11 +13,7 @@ def main():
 
     def clk_main():
         while True:
-            now = datetime.datetime.now()
-            clk.dir_long = - (now.minute / 60.0) * 2.0 * \
-                math.pi + math.pi / 2.0
-            clk.dir_short = -((now.hour % 12) / 12) * 2.0 * math.pi - \
-                (now.minute / 60.0) * math.pi / 12.0 + math.pi / 2.0
+            clk.set_now()
 
     win = clock_gui.Window(clk)
 
