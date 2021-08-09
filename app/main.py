@@ -18,7 +18,7 @@ def main():
 
     threads = []
     threads.append(threading.Thread(target=win.main))
-    threads.append(threading.Thread(target=clk_main))
+    threads.append(threading.Thread(target=clk_main, daemon=True))
     for th in threads:
         th.start()
 
