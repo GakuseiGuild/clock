@@ -8,19 +8,21 @@ from src.clock import clock  # nopep8
 from src.gui import clock as clock_gui  # nopep8
 
 
+def clk_main(clk):
+    while True:
+        clk.set_now()
+        time.sleep(1.0 / 60.0)
+
+
 def main():
     clk = clock.Clock()
-
-    def clk_main():
-        while True:
-            clk.set_now()
-            time.sleep(1.0 / 60.0)
 
     win = clock_gui.Window(clk)
 
     threads = []
-    threads.append(threading.Thread(target=win.main))
-    threads.append(threading.Thread(target=clk_main, daemon=True))
+    threads.append(threading.Thread(name="gui", target=win.main))
+    threads.append(threading.Thread(
+        name="clock", target=clk_main, args=(clk,), daemon=True))
     for th in threads:
         th.start()
 
