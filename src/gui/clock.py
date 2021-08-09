@@ -61,9 +61,9 @@ class ClockArea(Gtk.DrawingArea):
         cr.arc(0.0, 0.0, rad, 0.0, 2.0 * math.pi)
         cr.stroke()
 
-        target_long = np.dot(rotation2d(self.clk.dir_long),
+        target_long = np.dot(rotation2d(self.clk.dir_long()),
                              np.array([0.9 * rad, 0.0]))
-        target_short = np.dot(rotation2d(self.clk.dir_short),
+        target_short = np.dot(rotation2d(self.clk.dir_short()),
                               np.array([0.5 * rad, 0.0]))
 
         # long hand

@@ -1,6 +1,7 @@
 import math
 import os
 import sys
+import time
 import threading
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from src.clock import clock  # nopep8
@@ -13,6 +14,7 @@ def main():
     def clk_main():
         while True:
             clk.set_now()
+            time.sleep(1.0 / 60.0)
 
     win = clock_gui.Window(clk)
 
