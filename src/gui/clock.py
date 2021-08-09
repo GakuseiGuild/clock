@@ -7,13 +7,6 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk  # nopep8
 
 
-def rotation2d(dir):
-    cos = np.cos(dir)
-    sin = np.sin(dir)
-    return np.array([[cos, -sin],
-                     [sin,  cos]])
-
-
 class ClockArea(Gtk.DrawingArea):
     def __init__(self, clk):
         super().__init__()
@@ -60,6 +53,12 @@ class ClockArea(Gtk.DrawingArea):
         cr.set_line_width(line_width)
         cr.arc(0.0, 0.0, rad, 0.0, 2.0 * math.pi)
         cr.stroke()
+
+        def rotation2d(dir):
+            cos = np.cos(dir)
+            sin = np.sin(dir)
+            return np.array([[cos, -sin],
+                             [sin,  cos]])
 
         target_long = np.dot(rotation2d(self.clk.dir_long()),
                              np.array([0.9 * rad, 0.0]))
