@@ -38,7 +38,9 @@ class clock_area(Gtk.DrawingArea):
         field_height = 2.0 * (rad + line_width)
 
         img = cairo.ImageSurface.create_from_png("clock.png")
-        coef = min(aw / (img.get_width() + 2.0 * line_width), ah / (img.get_height() + 2.0 * line_width))
+        coef = min(aw / (img.get_width() + 2.0 * line_width),
+                   ah / (img.get_height() + 2.0 * line_width))
+        cr.identity_matrix()
         cr.scale(coef, coef)
         cr.translate(line_width, line_width)
         cr.set_source_surface(img)
