@@ -60,11 +60,6 @@ class clock_area(Gtk.DrawingArea):
         cr.arc(0.0, 0.0, rad, 0.0, 2.0 * math.pi)
         cr.stroke()
 
-        # center
-        cr.set_line_width(line_width)
-        cr.arc(0.0, 0.0, 0.02 * rad, 0.0, 2.0 * math.pi)
-        cr.fill()
-
         now = datetime.datetime.now()
 
         # long hand
