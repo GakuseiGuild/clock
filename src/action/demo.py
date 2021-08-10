@@ -9,3 +9,4 @@ class Demo(base.Base):
         super().__init__(clk)
 
     def execute(self):
+        self._clk.set_target_dir(long=1.0, short=1.0)
