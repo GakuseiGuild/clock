@@ -36,7 +36,6 @@ def moon_age(datetime):
     moon_age = timezone("Asia/Tokyo").localize(datetime) - \
         previous_new_moon_time_jst
     moon_age = round(moon_age.days + moon_age.seconds / (60 * 60 * 24.0), 1)
-    print(moon_age)
     return -(moon_age / 31.0) * math.pi / 6.0 + 1.5 * math.pi
 
 
