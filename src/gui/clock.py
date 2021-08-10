@@ -74,6 +74,18 @@ class ClockArea(Gtk.DrawingArea):
 
         cr.set_source_rgb(0.0, 0.0, 0.0)
 
+        # title
+        text = "GakuseiGuild"
+        font_size = 2.0 * line_width
+        cr.set_font_size(font_size)
+        cr.select_font_face("Courier", cairo.FONT_SLANT_NORMAL,
+                            cairo.FONT_WEIGHT_NORMAL)
+        cr.set_font_matrix(cairo.Matrix(
+            font_size, 0.0, 0.0, -font_size, 0.0, 0.0))
+        cr.move_to(-font_size * 14 / 4.0, font_size)
+        cr.text_path(text)
+        cr.fill()
+
         # long hand
         cr.set_line_width(0.25 * line_width)
         cr.move_to(0, 0)
