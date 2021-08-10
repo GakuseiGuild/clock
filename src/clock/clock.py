@@ -40,12 +40,16 @@ class Clock():
         with self.__lock:
             return self.__target_dir
 
-    def set_target_vel(self, target):
+    def set_target_vel(self, target, long, short):
+        if target == None:
+            target = Dir(long=long, short=short)
         with self.__lock:
             self.__target_vel = target
             self.__target_dir = None
 
-    def set_target_dir(self, target):
+    def set_target_dir(self, target=None, long=0.0, short=0.0):
+        if target == None:
+            target = Dir(long=long, short=short)
         with self.__lock:
             self.__target_dir = target
             e = angle.wrap_to_pi(
