@@ -34,7 +34,7 @@ class Demo(base.Base):
                 self.__time = time.time()
             self._clk.set_target_vel(long=1.0, short=-1.0)
         elif self.__state == 4:
-            if time.time() - self.__time > 3.0:
+            if time.time() - self.__time > 10.0:
                 self.__state = 0
                 self.__time = time.time()
             self._clk.set_now()
