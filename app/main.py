@@ -8,14 +8,16 @@ from src.gui import clock as gui  # nopep8
 
 
 def main():
-    clk = clock.Clock()
+    # 制御周期
+    cycle = 1.0 / 60.0
+    clk = clock.Clock(cycle)
 
     win = gui.Window(clk)
 
     threads = []
     threads.append(threading.Thread(name="gui", target=win.main))
     threads.append(threading.Thread(
-        name="clock", target=driver.run, args=(clk,), daemon=True))
+        name="clock", target=driver.run, args=(clk, cycle), daemon=True))
     for th in threads:
         th.start()
 

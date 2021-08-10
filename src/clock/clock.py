@@ -1,7 +1,11 @@
 import datetime
 import math
+import os
+import sys
 import threading
 from typing import NamedTuple
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from src.util import angle  # nopep8
 
 
 class Dir(NamedTuple):
@@ -10,11 +14,25 @@ class Dir(NamedTuple):
 
 
 class Clock():
-    def __init__(self):
-        self.__target_dir = Dir(long=0.0, short=0.0)
+    def __init__(self, cycle):
+        # 制御周期
+        self.__cycle = cycle
+        # 加速度制限 [rad/s^2]
+        self.__acc = Dir(long=1.0, short=1.0)
+        # 速度 [rad/s]
+        self.__vel = Dir(long=0.0, short=0.0)
+        # 角度 [rad]
+        self.__dir = Dir(long=0.0, short=0.0)
+        # 目標角度 [rad]
+        self.__target_dir = self.__dir
+
         self.__lock = threading.RLock()
 
     def dir(self):
+        with self.__lock:
+            return self.__dir
+
+    def target_dir(self):
         with self.__lock:
             return self.__target_dir
 
@@ -27,3 +45,16 @@ class Clock():
 
     def set_now(self):
         self.set_time(datetime.datetime.now())
+
+    def execute(self):
+        with self.__lock:
+            vel_long = self.__vel.long + self.__cycle * self.__acc.long
+            vel_short = self.__vel.short + self.__cycle * self.__acc.short
+            self.__vel = Dir(vel_long, vel_short)
+            long = angle.wrap_to_2pi(self.__dir.long +
+                                     angle.wrap_to_pi(self.__target_dir.long - self.__dir.long) *
+                                     self.__cycle * self.__vel.long)
+            short = angle.wrap_to_2pi(self.__dir.short +
+                                      angle.wrap_to_pi(self.__target_dir.short - self.__dir.short) *
+                                      self.__cycle * self.__vel.short)
+            self.__dir = Dir(long=long, short=short)
