@@ -21,6 +21,8 @@ class Clock():
         self.__acc = Dir(long=1.0, short=1.0)
         # 速度制限 [rad/s^2]
         self.__vel_max = Dir(long=1.0, short=1.0)
+        # 目標速度 [rad/s]
+        self.__target_vel = Dir(long=0.0, short=0.0)
         # 速度 [rad/s]
         self.__vel = Dir(long=0.0, short=0.0)
         # 角度 [rad]
@@ -38,27 +40,40 @@ class Clock():
         with self.__lock:
             return self.__target_dir
 
-    def set_time(self, time):
+    def set_target_vel(self, target):
         with self.__lock:
-            self.__target_dir = Dir(long=-
-                                    (time.minute / 60.0) * 2.0 *
-                                    math.pi + math.pi / 2.0, short=- ((time.hour % 12) / 12) * 2.0 * math.pi - (
-                                        time.minute / 60.0) * math.pi / 6.0 + math.pi / 2.0)
+            self.__target_vel = target
+            self.__target_dir = None
+
+    def set_target_dir(self, target):
+        with self.__lock:
+            self.__target_dir = target
+            vel_long = angle.wrap_to_pi(
+                self.__target_dir.long - self.__dir.long)
+            vel_short = angle.wrap_to_pi(
+                self.__target_dir.short - self.__dir.short)
+            self.__target_vel = Dir(long=vel_long, short=vel_short)
+
+    def set_time(self, time):
+        self.set_target_dir(Dir(long=-
+                                (time.minute / 60.0) * 2.0 *
+                                math.pi + math.pi / 2.0, short=- ((time.hour % 12) / 12) * 2.0 * math.pi - (
+                                    time.minute / 60.0) * math.pi / 6.0 + math.pi / 2.0))
 
     def set_now(self):
         self.set_time(datetime.datetime.now())
 
     def execute(self):
         with self.__lock:
-            vel_target_long = angle.wrap_to_pi(
-                self.__target_dir.long - self.__dir.long)
-            vel_target_short = angle.wrap_to_pi(
-                self.__target_dir.short - self.__dir.short)
-            vel_long = self.__vel.long + self.__cycle * math.copysign(self.__acc.long,
-                                                                      angle.wrap_to_pi(vel_target_long - self.__vel.long))
+            vel_long = self.__vel.long + self.__cycle * math.copysign(min(self.__acc.long, abs(self.__target_vel.long - self.__vel.long)),
+                                                                      angle.wrap_to_pi(self.__target_vel.long - self.__vel.long))
             vel_short = self.__vel.short + self.__cycle * \
-                math.copysign(self.__acc.short, angle.wrap_to_pi(
-                    vel_target_short - self.__vel.short))
+                math.copysign(min(self.__acc.short, abs(self.__target_vel.short - self.__vel.short)), angle.wrap_to_pi(
+                    self.__target_vel.short - self.__vel.short))
+            vel_long = math.copysign(
+                min(abs(vel_long), self.__vel_max.long), vel_long)
+            vel_short = math.copysign(
+                min(abs(vel_short), self.__vel_max.short), vel_short)
             self.__vel = Dir(vel_long, vel_short)
             long = angle.wrap_to_2pi(
                 self.__dir.long + self.__cycle * self.__vel.long)
