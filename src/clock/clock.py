@@ -48,10 +48,14 @@ class Clock():
     def set_target_dir(self, target):
         with self.__lock:
             self.__target_dir = target
-            vel_long = angle.wrap_to_pi(
+            e = angle.wrap_to_pi(
                 self.__target_dir.long - self.__dir.long)
-            vel_short = angle.wrap_to_pi(
+            vel_long = math.copysign(
+                math.sqrt(2.0 * self.__acc.long * abs(e)), e)
+            e = angle.wrap_to_pi(
                 self.__target_dir.short - self.__dir.short)
+            vel_short = math.copysign(
+                math.sqrt(2.0 * self.__acc.short * abs(e)), e)
             self.__target_vel = Dir(long=vel_long, short=vel_short)
 
     def set_time(self, time):
@@ -65,11 +69,12 @@ class Clock():
 
     def execute(self):
         with self.__lock:
-            vel_long = self.__vel.long + self.__cycle * math.copysign(min(self.__acc.long, abs(self.__target_vel.long - self.__vel.long)),
-                                                                      angle.wrap_to_pi(self.__target_vel.long - self.__vel.long))
-            vel_short = self.__vel.short + self.__cycle * \
-                math.copysign(min(self.__acc.short, abs(self.__target_vel.short - self.__vel.short)), angle.wrap_to_pi(
-                    self.__target_vel.short - self.__vel.short))
+            e = angle.wrap_to_pi(self.__target_vel.long - self.__vel.long)
+            acc = 0.0 if e == 0.0 else math.copysign(self.__acc.long, e)
+            vel_long = self.__vel.long + self.__cycle * acc
+            e = angle.wrap_to_pi(self.__target_vel.short - self.__vel.short)
+            acc = 0.0 if e == 0.0 else math.copysign(self.__acc.short, e)
+            vel_short = self.__vel.short + self.__cycle * acc
             vel_long = math.copysign(
                 min(abs(vel_long), self.__vel_max.long), vel_long)
             vel_short = math.copysign(
