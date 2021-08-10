@@ -19,6 +19,8 @@ class Clock():
         self.__cycle = cycle
         # 加速度制限 [rad/s^2]
         self.__acc = Dir(long=1.0, short=1.0)
+        # 速度制限 [rad/s^2]
+        self.__vel_max = Dir(long=1.0, short=1.0)
         # 速度 [rad/s]
         self.__vel = Dir(long=0.0, short=0.0)
         # 角度 [rad]
@@ -48,13 +50,18 @@ class Clock():
 
     def execute(self):
         with self.__lock:
-            vel_long = self.__vel.long + self.__cycle * self.__acc.long
-            vel_short = self.__vel.short + self.__cycle * self.__acc.short
+            vel_target_long = angle.wrap_to_pi(
+                self.__target_dir.long - self.__dir.long)
+            vel_target_short = angle.wrap_to_pi(
+                self.__target_dir.short - self.__dir.short)
+            vel_long = self.__vel.long + self.__cycle * math.copysign(self.__acc.long,
+                                                                      angle.wrap_to_pi(vel_target_long - self.__vel.long))
+            vel_short = self.__vel.short + self.__cycle * \
+                math.copysign(self.__acc.short, angle.wrap_to_pi(
+                    vel_target_short - self.__vel.short))
             self.__vel = Dir(vel_long, vel_short)
-            long = angle.wrap_to_2pi(self.__dir.long +
-                                     angle.wrap_to_pi(self.__target_dir.long - self.__dir.long) *
-                                     self.__cycle * self.__vel.long)
-            short = angle.wrap_to_2pi(self.__dir.short +
-                                      angle.wrap_to_pi(self.__target_dir.short - self.__dir.short) *
-                                      self.__cycle * self.__vel.short)
+            long = angle.wrap_to_2pi(
+                self.__dir.long + self.__cycle * self.__vel.long)
+            short = angle.wrap_to_2pi(
+                self.__dir.short + self.__cycle * self.__vel.short)
             self.__dir = Dir(long=long, short=short)
