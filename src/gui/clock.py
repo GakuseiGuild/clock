@@ -32,6 +32,18 @@ class ClockArea(Gtk.DrawingArea):
         field_width = 2.0 * (rad + line_width)
         field_height = 2.0 * (rad + line_width)
 
+        cr.identity_matrix()
+        coef = min(aw / field_width, ah / field_height)
+        cr.transform(cairo.Matrix(coef, 0, 0, -coef, coef *
+                     field_width / 2.0, coef * field_height / 2.0))
+
+        cr.set_source_rgb(1.0, 1.0, 1.0)
+
+        # circle
+        cr.set_line_width(line_width)
+        cr.arc(0.0, 0.0, rad, 0.0, 2.0 * math.pi)
+        cr.fill()
+
         img = cairo.ImageSurface.create_from_png(
             os.path.dirname(__file__) + "/assets/" + self.__clk.dial_name())
         coef = min(aw / (img.get_width() + 2.0 * line_width),
@@ -47,13 +59,6 @@ class ClockArea(Gtk.DrawingArea):
         cr.transform(cairo.Matrix(coef, 0, 0, -coef, coef *
                      field_width / 2.0, coef * field_height / 2.0))
 
-        cr.set_source_rgb(0.0, 0.0, 0.0)
-
-        # circle
-        cr.set_line_width(line_width)
-        cr.arc(0.0, 0.0, rad, 0.0, 2.0 * math.pi)
-        cr.stroke()
-
         def rotation2d(dir):
             cos = np.cos(dir)
             sin = np.sin(dir)
@@ -64,6 +69,8 @@ class ClockArea(Gtk.DrawingArea):
                              np.array([0.9 * rad, 0.0]))
         target_short = np.dot(rotation2d(self.__clk.dir().short),
                               np.array([0.5 * rad, 0.0]))
+
+        cr.set_source_rgb(0.0, 0.0, 0.0)
 
         # long hand
         cr.set_line_width(0.25 * line_width)
