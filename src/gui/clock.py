@@ -21,7 +21,7 @@ class ClockArea(Gtk.DrawingArea):
             return True
         self.add_tick_callback(tick_callback)
 
-        self.clk = clk
+        self.__clk = clk
 
     def on_draw(self, area, cr):
         aw = area.get_allocated_width()
@@ -33,7 +33,7 @@ class ClockArea(Gtk.DrawingArea):
         field_height = 2.0 * (rad + line_width)
 
         img = cairo.ImageSurface.create_from_png(
-            os.path.dirname(__file__) + "/assets/clock.png")
+            os.path.dirname(__file__) + "/assets/" + self.__clk.dial_name())
         coef = min(aw / (img.get_width() + 2.0 * line_width),
                    ah / (img.get_height() + 2.0 * line_width))
         cr.identity_matrix()
@@ -60,9 +60,9 @@ class ClockArea(Gtk.DrawingArea):
             return np.array([[cos, -sin],
                              [sin,  cos]])
 
-        target_long = np.dot(rotation2d(self.clk.dir().long),
+        target_long = np.dot(rotation2d(self.__clk.dir().long),
                              np.array([0.9 * rad, 0.0]))
-        target_short = np.dot(rotation2d(self.clk.dir().short),
+        target_short = np.dot(rotation2d(self.__clk.dir().short),
                               np.array([0.5 * rad, 0.0]))
 
         # long hand
@@ -80,13 +80,13 @@ class ClockArea(Gtk.DrawingArea):
 
 
 class Window(Gtk.Window):
-    def __init__(self, clk):
+    def __init__(self, __clk):
         Gtk.Window.__init__(self)
         self.set_title("clock")
         self.set_default_size(800, 600)
         self.connect("destroy", Gtk.main_quit)
 
-        ca = ClockArea(clk)
+        ca = ClockArea(__clk)
         self.add(ca)
         self.show_all()
 

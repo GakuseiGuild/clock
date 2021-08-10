@@ -29,6 +29,8 @@ class Clock():
         self.__dir = Dir(long=0.0, short=0.0)
         # 目標角度 [rad]
         self.__target_dir = self.__dir
+        # 文字盤のファイル名
+        self.__dial_name = "clock.png"
 
         self.__lock = threading.RLock()
 
@@ -39,6 +41,10 @@ class Clock():
     def target_dir(self):
         with self.__lock:
             return self.__target_dir
+
+    def dial_name(self):
+        with self.__lock:
+            return self.__dial_name
 
     def set_target_vel(self, target=None, long=0.0, short=0.0):
         if target == None:
@@ -70,6 +76,10 @@ class Clock():
 
     def set_now(self):
         self.set_time(datetime.datetime.now())
+
+    def set_dial_name(self, name):
+        with self.__lock:
+            self.__dial_name = name
 
     def execute(self):
         with self.__lock:
