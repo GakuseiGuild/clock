@@ -40,7 +40,7 @@ class Clock():
         with self.__lock:
             return self.__target_dir
 
-    def set_target_vel(self, target, long, short):
+    def set_target_vel(self, target=None, long=0.0, short=0.0):
         if target == None:
             target = Dir(long=long, short=short)
         with self.__lock:
