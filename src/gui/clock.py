@@ -97,6 +97,11 @@ class ClockArea(Gtk.DrawingArea):
         cr.move_to(0, 0)
         cr.line_to(target_short[0], target_short[1])
         cr.stroke()
+
+        # circle
+        cr.set_line_width(line_width)
+        cr.arc(0.0, 0.0, 0.035 * rad, 0.0, 2.0 * math.pi)
+        cr.fill()
         return False
 
 
