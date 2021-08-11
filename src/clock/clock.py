@@ -69,10 +69,10 @@ class Clock():
             self.__target_vel = Dir(long=vel_long, short=vel_short)
 
     def set_time(self, time):
-        self.set_target_dir(Dir(long=-
-                                (time.minute / 60.0) * 2.0 *
-                                math.pi + math.pi / 2.0, short=- ((time.hour % 12) / 12) * 2.0 * math.pi - (
-                                    time.minute / 60.0) * math.pi / 6.0 + math.pi / 2.0))
+        self.set_target_dir(long=-
+                            (time.minute / 60.0) * 2.0 *
+                            math.pi + math.pi / 2.0, short=- ((time.hour % 12) / 12) * 2.0 * math.pi - (
+                                time.minute / 60.0) * math.pi / 6.0 + math.pi / 2.0)
 
     def set_now(self):
         self.set_time(datetime.datetime.now())
