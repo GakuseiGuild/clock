@@ -58,15 +58,6 @@ class Clock():
             target = Dir(long=long, short=short)
         with self.__lock:
             self.__target_dir = target
-            e = angle.wrap_to_pi(
-                self.__target_dir.long - self.__dir.long)
-            vel_long = math.copysign(
-                math.sqrt(2.0 * self.__acc.long * abs(e)), e)
-            e = angle.wrap_to_pi(
-                self.__target_dir.short - self.__dir.short)
-            vel_short = math.copysign(
-                math.sqrt(2.0 * self.__acc.short * abs(e)), e)
-            self.__target_vel = Dir(long=vel_long, short=vel_short)
 
     def set_time(self, time):
         self.set_target_dir(long=-
@@ -83,6 +74,18 @@ class Clock():
 
     def execute(self):
         with self.__lock:
+            if self.__target_dir != None:
+                # target_dir が設定されていればそれをもとに target_vel を生成
+                e = angle.wrap_to_pi(
+                    self.__target_dir.long - self.__dir.long)
+                vel_long = math.copysign(
+                    math.sqrt(2.0 * self.__acc.long * abs(e)), e)
+                e = angle.wrap_to_pi(
+                    self.__target_dir.short - self.__dir.short)
+                vel_short = math.copysign(
+                    math.sqrt(2.0 * self.__acc.short * abs(e)), e)
+                self.__target_vel = Dir(long=vel_long, short=vel_short)
+
             e = angle.wrap_to_pi(self.__target_vel.long - self.__vel.long)
             acc = 0.0 if e == 0.0 else math.copysign(self.__acc.long, e)
             vel_long = self.__vel.long + self.__cycle * acc
