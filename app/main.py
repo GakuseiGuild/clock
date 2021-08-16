@@ -17,7 +17,9 @@ def main():
     threads = []
     threads.append(threading.Thread(name="gui", target=win.main))
     threads.append(threading.Thread(
-        name="clock", target=driver.run, args=(clk, cycle), daemon=True))
+        name="clock", target=driver.run_clock, args=(clk, cycle), daemon=True))
+    threads.append(threading.Thread(
+        name="action", target=driver.run_action, args=(clk, cycle), daemon=True))
     for th in threads:
         th.start()
 
