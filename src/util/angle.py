@@ -1,6 +1,8 @@
 import datetime
 import ephem
+import json
 import math
+import requests
 from pytz import timezone
 
 
@@ -41,3 +43,16 @@ def moon_age(datetime):
 
 def current_moon_age():
     return moon_age(datetime.datetime.now())
+
+
+def weather(area_name):
+    url = 'https://www.jma.go.jp/bosai/forecast/data/forecast/010000.json'
+    data = requests.get(url).json()
+    for area in data:
+        name = area['name']
+        if name == area_name:
+            for ts in area['srf']['timeSeries']:
+                if 'weathers' in ts['areas']:
+                    for i, v in enumerate(ts['areas']['weathers']):
+                        return v
+    return
