@@ -1,6 +1,5 @@
 import datetime
 import ephem
-import json
 import math
 import requests
 from pytz import timezone
