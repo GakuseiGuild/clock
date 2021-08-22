@@ -45,7 +45,7 @@ class ClockArea(Gtk.DrawingArea):
         cr.fill()
 
         dial_path = os.path.dirname(
-            __file__) + "/assets/" + self.__clk.dial_name()
+            __file__) + "/../assets/" + self.__clk.dial_name()
         if os.path.isfile(dial_path):
             img = cairo.ImageSurface.create_from_png(dial_path)
             img.write_to_png("output.png")
