@@ -29,13 +29,12 @@ def current_zodiac():
 
 
 def moon_age(datetime):
-    utc = timezone("Asia/Tokyo").localize(datetime).astimezone(timezone("UTC"))
+    tz = timezone("Asia/Tokyo")
 
-    previous_new_moon_time_jst = timezone("UTC").localize(ephem.previous_new_moon(utc).datetime()).astimezone(
-        timezone("Asia/Tokyo"))
-
-    moon_age = timezone("Asia/Tokyo").localize(datetime) - \
-        previous_new_moon_time_jst
+    utc = tz.localize(datetime).astimezone(timezone("UTC"))
+    previous_new_moon_time_jst = timezone("UTC").localize(
+        ephem.previous_new_moon(utc).datetime()).astimezone(tz)
+    moon_age = tz.localize(datetime) - previous_new_moon_time_jst
     moon_age = round(moon_age.days + moon_age.seconds / (60 * 60 * 24.0), 1)
     return (moon_age / 31.0) * 2.0 * math.pi + math.pi / 2.0
 
