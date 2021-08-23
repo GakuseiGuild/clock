@@ -109,10 +109,10 @@ class Clock():
                 file_path = os.path.dirname(
                     __file__) + "/../../.out/" + file_name
                 surface.write_to_png(file_path)
-            make_out(0.0, "out1.png")
-            make_out(0.5 * math.pi, "out2.png")
-            make_out(1.0 * math.pi, "out3.png")
-            make_out(1.5 * math.pi, "out4.png")
+            make_out(0.0, "1.png")
+            make_out(0.5 * math.pi, "2.png")
+            make_out(1.0 * math.pi, "3.png")
+            make_out(1.5 * math.pi, "4.png")
 
     def execute_hands(self):
         with self.__lock:
