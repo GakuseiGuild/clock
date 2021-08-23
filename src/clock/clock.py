@@ -1,3 +1,4 @@
+import cairo
 import datetime
 import math
 import os
@@ -73,6 +74,21 @@ class Clock():
             self.__dial_name = name
 
     def execute(self):
+        aw = 600  # px 電子ペーパーの幅
+        ah = 448  # px 電子ペーパーの高さ
+        ew = 114.9  # mm 電子ペーパーの幅
+        surface = cairo.ImageSurface(cairo.Format.ARGB32, aw, ah)
+        ctx = cairo.Context(surface)
+        dial_path = os.path.dirname(
+            __file__) + "/../assets/" + "ref.png"  # self.__dial_name
+        if os.path.isfile(dial_path):
+            img = cairo.ImageSurface.create_from_png(dial_path)
+            coef = (aw / img.get_width()) * (270.0 / ew)
+            ctx.scale(coef, coef)
+            ctx.translate(-(117.5 * aw / ew) / coef, -(12.5 * aw / ew) / coef)
+            ctx.set_source_surface(img)
+            ctx.paint()
+            surface.write_to_png("out.png")
         with self.__lock:
             if self.__target_dir != None:
                 # target_dir が設定されていればそれをもとに target_vel を生成
