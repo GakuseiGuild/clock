@@ -44,7 +44,6 @@ class ClockArea(Gtk.DrawingArea):
             __file__) + "/../assets/" + self.__clk.dial_name()
         if os.path.isfile(dial_path):
             img = cairo.ImageSurface.create_from_png(dial_path)
-            img.write_to_png("output.png")
             prev_coef = coef
             coef = min((aw - 2.0 * line_width * coef) / img.get_width(),
                        (ah - 2.0 * line_width * coef) / img.get_height())
