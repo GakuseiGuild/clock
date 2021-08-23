@@ -78,11 +78,13 @@ class Clock():
         AW = 600  # px 電子ペーパーの幅
         AH = 448  # px 電子ペーパーの高さ
         EW = 114.9  # mm 電子ペーパーの幅
+        DIAMETER = 270.0  # 文字盤の直径
+
         dial_path = os.path.dirname(
             __file__) + "/../assets/" + self.__dial_name
         if os.path.isfile(dial_path):
             img = cairo.ImageSurface.create_from_png(dial_path)
-            coef = (AW / img.get_width()) * (270.0 / EW)
+            coef = (AW / img.get_width()) * (DIAMETER / EW)
 
             def rotation2d(dir):
                 cos = np.cos(dir)
@@ -97,7 +99,7 @@ class Clock():
                 ctx.rotate(theta)
                 ctx.translate(-img.get_width() / 2.0, -img.get_width() / 2.0)
                 trans = np.dot(rotation2d(-theta),
-                               np.array([17.5, 122.5]) * img.get_width() / 270.0)
+                               np.array([17.5, 122.5]) * img.get_width() / DIAMETER)
                 ctx.translate(trans[0], trans[1])
                 ctx.set_source_surface(img)
                 ctx.paint()
