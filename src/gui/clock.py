@@ -10,10 +10,6 @@ from gi.repository import Gtk  # nopep8
 class ClockArea(Gtk.DrawingArea):
     def __init__(self, clk):
         super().__init__()
-        self.vexpand = True
-        self.hexpand = True
-        self.surface = None
-
         self.connect("draw", self.on_draw)
 
         def tick_callback(self, ptr):
