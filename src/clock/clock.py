@@ -1,6 +1,7 @@
 import cairo
 import datetime
 import math
+import numpy as np
 import os
 import sys
 import threading
@@ -82,16 +83,29 @@ class Clock():
         if os.path.isfile(dial_path):
             img = cairo.ImageSurface.create_from_png(dial_path)
             coef = (AW / img.get_width()) * (270.0 / EW)
-            # 第2象限
-            surface = cairo.ImageSurface(cairo.Format.ARGB32, AW, AH)
-            ctx = cairo.Context(surface)
-            ctx.rotate(math.pi / 2.0)
-            ctx.scale(coef, coef)
-            ctx.translate(-img.get_width() / 2.0, -img.get_height() / 2.0)
-            ctx.translate((122.5 * img.get_width() / 270.0), -(17.5 * img.get_width() / 270.0))
-            ctx.set_source_surface(img)
-            ctx.paint()
-            surface.write_to_png("out1.png")
+
+            def rotation2d(dir):
+                cos = np.cos(dir)
+                sin = np.sin(dir)
+                return np.array([[cos, -sin],
+                                 [sin,  cos]])
+
+            def make_out(theta, file_name):
+                surface = cairo.ImageSurface(cairo.Format.ARGB32, AW, AH)
+                ctx = cairo.Context(surface)
+                ctx.scale(coef, coef)
+                ctx.rotate(theta)
+                ctx.translate(-img.get_width() / 2.0, -img.get_width() / 2.0)
+                trans = np.dot(rotation2d(-theta),
+                               np.array([17.5 * img.get_width() / 270.0, 122.5 * img.get_width() / 270.0]))
+                ctx.translate(trans[0], trans[1])
+                ctx.set_source_surface(img)
+                ctx.paint()
+                surface.write_to_png(file_name)
+            make_out(0.0, "out1.png")
+            make_out(0.5 * math.pi, "out2.png")
+            make_out(1.0 * math.pi, "out3.png")
+            make_out(1.5 * math.pi, "out4.png")
         with self.__lock:
             if self.__target_dir != None:
                 # target_dir が設定されていればそれをもとに target_vel を生成
