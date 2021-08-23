@@ -33,7 +33,7 @@ class Clock():
         # 目標角度 [rad]
         self.__target_dir = self.__dir
         # 文字盤のファイル名
-        self.__dial_name = "clock.png"
+        self.__dial_name = "none.png"
         # 文字盤を出力したか
         self.__dial_output = True
 
@@ -76,7 +76,7 @@ class Clock():
     def set_dial_name(self, name):
         if name != self.__dial_name:
             with self.__lock:
-                self.__dial_name = name
+                self.__dial_name = name if name != "" else "none.png"
                 self.__dial_output = False
 
     def execute_dial(self):
