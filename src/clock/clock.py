@@ -1,5 +1,6 @@
 import cairo
 import datetime
+import fcntl
 import math
 import numpy as np
 import os
@@ -114,7 +115,9 @@ class Clock():
                 ctx.paint()
                 file_path = os.path.dirname(
                     __file__) + "/../../.out/" + file_name
-                surface.write_to_png(file_path)
+                with open(file_path, "r+") as f:
+                    fcntl.flock(f, fcntl.LOCK_EX)
+                    surface.write_to_png(file_path)
             make_out(0.0, "1.png")
             make_out(0.5 * math.pi, "2.png")
             make_out(1.0 * math.pi, "3.png")
