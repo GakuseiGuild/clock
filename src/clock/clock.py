@@ -77,18 +77,21 @@ class Clock():
         AW = 600  # px 電子ペーパーの幅
         AH = 448  # px 電子ペーパーの高さ
         EW = 114.9  # mm 電子ペーパーの幅
-        surface = cairo.ImageSurface(cairo.Format.ARGB32, AW, AH)
-        ctx = cairo.Context(surface)
         dial_path = os.path.dirname(
             __file__) + "/../assets/" + "ref.png"  # self.__dial_name
         if os.path.isfile(dial_path):
             img = cairo.ImageSurface.create_from_png(dial_path)
             coef = (AW / img.get_width()) * (270.0 / EW)
+            # 第2象限
+            surface = cairo.ImageSurface(cairo.Format.ARGB32, AW, AH)
+            ctx = cairo.Context(surface)
+            ctx.rotate(math.pi / 2.0)
             ctx.scale(coef, coef)
-            ctx.translate(-(117.5 * AW / EW) / coef, -(12.5 * AW / EW) / coef)
+            ctx.translate(-img.get_width() / 2.0, -img.get_height() / 2.0)
+            ctx.translate((122.5 * img.get_width() / 270.0), -(17.5 * img.get_width() / 270.0))
             ctx.set_source_surface(img)
             ctx.paint()
-            surface.write_to_png("out.png")
+            surface.write_to_png("out1.png")
         with self.__lock:
             if self.__target_dir != None:
                 # target_dir が設定されていればそれをもとに target_vel を生成
