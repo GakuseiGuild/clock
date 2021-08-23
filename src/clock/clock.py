@@ -92,6 +92,9 @@ class Clock():
                 return np.array([[cos, -sin],
                                  [sin,  cos]])
 
+            os.makedirs(os.path.dirname(__file__) +
+                        "/../../.out/", exist_ok=True)
+
             def make_out(theta, file_name):
                 surface = cairo.ImageSurface(cairo.Format.ARGB32, AW, AH)
                 ctx = cairo.Context(surface)
@@ -103,7 +106,9 @@ class Clock():
                 ctx.translate(trans[0], trans[1])
                 ctx.set_source_surface(img)
                 ctx.paint()
-                surface.write_to_png(file_name)
+                file_path = os.path.dirname(
+                    __file__) + "/../../.out/" + file_name
+                surface.write_to_png(file_path)
             make_out(0.0, "out1.png")
             make_out(0.5 * math.pi, "out2.png")
             make_out(1.0 * math.pi, "out3.png")
