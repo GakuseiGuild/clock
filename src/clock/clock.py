@@ -97,7 +97,7 @@ class Clock():
                 ctx.rotate(theta)
                 ctx.translate(-img.get_width() / 2.0, -img.get_width() / 2.0)
                 trans = np.dot(rotation2d(-theta),
-                               np.array([17.5 * img.get_width() / 270.0, 122.5 * img.get_width() / 270.0]))
+                               np.array([17.5, 122.5]) * img.get_width() / 270.0)
                 ctx.translate(trans[0], trans[1])
                 ctx.set_source_surface(img)
                 ctx.paint()
