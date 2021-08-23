@@ -33,6 +33,8 @@ class Clock():
         self.__target_dir = self.__dir
         # 文字盤のファイル名
         self.__dial_name = "clock.png"
+        # 文字盤を出力したか
+        self.__dial_output = True
 
         self.__lock = threading.RLock()
 
@@ -71,8 +73,10 @@ class Clock():
         self.set_time(datetime.datetime.now())
 
     def set_dial_name(self, name):
-        with self.__lock:
-            self.__dial_name = name
+        if name != self.__dial_name:
+            with self.__lock:
+                self.__dial_name = name
+                self.__dial_output = False
 
     def execute_dial(self):
         AW = 600  # px 電子ペーパーの幅
@@ -80,6 +84,8 @@ class Clock():
         EW = 114.9  # mm 電子ペーパーの幅
         DIAMETER = 270.0  # 文字盤の直径
 
+        if self.__dial_output == True:
+            return
         dial_path = os.path.dirname(
             __file__) + "/../assets/" + self.__dial_name
         if os.path.isfile(dial_path):
@@ -113,6 +119,7 @@ class Clock():
             make_out(0.5 * math.pi, "2.png")
             make_out(1.0 * math.pi, "3.png")
             make_out(1.5 * math.pi, "4.png")
+            self.__dial_output = True
 
     def execute_hands(self):
         with self.__lock:
