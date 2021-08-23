@@ -74,12 +74,12 @@ class Clock():
         with self.__lock:
             self.__dial_name = name
 
-    def execute(self):
+    def execute_dial(self):
         AW = 600  # px 電子ペーパーの幅
         AH = 448  # px 電子ペーパーの高さ
         EW = 114.9  # mm 電子ペーパーの幅
         dial_path = os.path.dirname(
-            __file__) + "/../assets/" + "ref.png"  # self.__dial_name
+            __file__) + "/../assets/" + self.__dial_name
         if os.path.isfile(dial_path):
             img = cairo.ImageSurface.create_from_png(dial_path)
             coef = (AW / img.get_width()) * (270.0 / EW)
@@ -106,6 +106,8 @@ class Clock():
             make_out(0.5 * math.pi, "out2.png")
             make_out(1.0 * math.pi, "out3.png")
             make_out(1.5 * math.pi, "out4.png")
+
+    def execute_hands(self):
         with self.__lock:
             if self.__target_dir != None:
                 # target_dir が設定されていればそれをもとに target_vel を生成
@@ -135,3 +137,9 @@ class Clock():
             short = angle.wrap_to_2pi(
                 self.__dir.short + self.__cycle * self.__vel.short)
             self.__dir = Dir(long=long, short=short)
+
+    def execute(self):
+        th0 = threading.Thread(target=self.execute_dial, daemon=True)
+        th1 = threading.Thread(target=self.execute_hands, daemon=True)
+        th0.start()
+        th1.start()
