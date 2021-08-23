@@ -40,6 +40,7 @@ class EpaperArea(Gtk.DrawingArea):
                     cr.translate(x, y)
                     cr.set_source_surface(img)
                     cr.paint()
+                    fcntl.flock(f, fcntl.LOCK_UN)
         return False
 
 

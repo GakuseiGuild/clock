@@ -118,6 +118,7 @@ class Clock():
                 with open(file_path) as f:
                     fcntl.flock(f, fcntl.LOCK_EX)
                     surface.write_to_png(file_path)
+                    fcntl.flock(f, fcntl.LOCK_UN)
             make_out(0.0, "1.png")
             make_out(0.5 * math.pi, "2.png")
             make_out(1.0 * math.pi, "3.png")
