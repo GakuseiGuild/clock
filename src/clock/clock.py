@@ -115,7 +115,7 @@ class Clock():
                 ctx.paint()
                 file_path = os.path.dirname(
                     __file__) + "/../../.out/" + file_name
-                with open(file_path, "r+") as f:
+                with open(file_path) as f:
                     fcntl.flock(f, fcntl.LOCK_EX)
                     surface.write_to_png(file_path)
             make_out(0.0, "1.png")

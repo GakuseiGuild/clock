@@ -28,7 +28,7 @@ class EpaperArea(Gtk.DrawingArea):
             file_path = os.path.dirname(
                 __file__) + "/../.out/" + str(i) + ".png"
             if os.path.isfile(file_path):
-                with open(file_path, "r+") as f:
+                with open(file_path) as f:
                     fcntl.flock(f, fcntl.LOCK_EX)
                     img = cairo.ImageSurface.create_from_png(file_path)
                     coef = min(aw / (img.get_width() * 2),
