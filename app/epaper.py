@@ -18,6 +18,7 @@ class EpaperArea(Gtk.DrawingArea):
     def on_draw(self, area, cr):
         aw = area.get_allocated_width()
         ah = area.get_allocated_height()
+        MARGIN = 5
 
         for i in range(1, 5):
             file_path = os.path.dirname(
@@ -25,12 +26,14 @@ class EpaperArea(Gtk.DrawingArea):
             if os.path.isfile(file_path):
                 try:
                     img = cairo.ImageSurface.create_from_png(file_path)
-                    coef = min(aw / (img.get_width() * 2),
-                               ah / (img.get_height() * 2))
-                    offset_x = (aw - coef * img.get_width() * 2.0) / 2.0
-                    offset_y = (ah - coef * img.get_height() * 2.0) / 2.0
-                    x = (0 if i % 2 == 1 else img.get_width())
-                    y = (0 if 2 < i else img.get_height())
+                    coef = min(aw / (img.get_width() * 2 + MARGIN),
+                               ah / (img.get_height() * 2 + MARGIN))
+                    offset_x = (
+                        aw - coef * (img.get_width() * 2.0 + MARGIN)) / 2.0
+                    offset_y = (
+                        ah - coef * (img.get_height() * 2.0 + MARGIN)) / 2.0
+                    x = (0 if i % 2 == 1 else img.get_width() + MARGIN)
+                    y = (0 if 2 < i else img.get_height() + MARGIN)
                     cr.identity_matrix()
                     cr.translate(offset_x, offset_y)
                     cr.scale(coef, coef)
