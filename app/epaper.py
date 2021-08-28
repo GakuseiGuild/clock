@@ -20,10 +20,6 @@ class EpaperArea(Gtk.DrawingArea):
         aw = area.get_allocated_width()
         ah = area.get_allocated_height()
 
-        cr.set_source_rgb(1.0, 1.0, 1.0)
-        cr.rectangle(0.0, 0.0, aw, ah)
-        cr.fill()
-
         for i in range(1, 5):
             file_path = os.path.dirname(
                 __file__) + "/../.out/" + str(i) + ".png"
@@ -36,8 +32,14 @@ class EpaperArea(Gtk.DrawingArea):
                     x = 0 if i % 2 == 1 else img.get_width()
                     y = 0 if 2 < i else img.get_height()
                     cr.identity_matrix()
+                    offset_x = (aw - coef * img.get_width() * 2.0) / 2.0
+                    offset_y = (ah - coef * img.get_height() * 2.0) / 2.0
+                    cr.translate(offset_x, offset_y)
                     cr.scale(coef, coef)
                     cr.translate(x, y)
+                    cr.set_source_rgb(1.0, 1.0, 1.0)
+                    cr.rectangle(0.0, 0.0, img.get_width(), img.get_height())
+                    cr.fill()
                     cr.set_source_surface(img)
                     cr.paint()
                     fcntl.flock(f, fcntl.LOCK_UN)

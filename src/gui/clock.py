@@ -30,6 +30,9 @@ class ClockArea(Gtk.DrawingArea):
 
         cr.identity_matrix()
         coef = min(aw / field_width, ah / field_height)
+        offset_x = (aw - coef * field_width) / 2.0
+        offset_y = (ah - coef * field_height) / 2.0
+        cr.translate(offset_x, offset_y)
         cr.transform(cairo.Matrix(coef, 0, 0, -coef, coef *
                      field_width / 2.0, coef * field_height / 2.0))
 
@@ -48,6 +51,7 @@ class ClockArea(Gtk.DrawingArea):
             coef = min((aw - 2.0 * line_width * coef) / img.get_width(),
                        (ah - 2.0 * line_width * coef) / img.get_height())
             cr.identity_matrix()
+            cr.translate(offset_x, offset_y)
             cr.scale(coef, coef)
             cr.translate(line_width * prev_coef / coef,
                          line_width * prev_coef / coef)
@@ -56,6 +60,7 @@ class ClockArea(Gtk.DrawingArea):
 
         cr.identity_matrix()
         coef = min(aw / field_width, ah / field_height)
+        cr.translate(offset_x, offset_y)
         cr.transform(cairo.Matrix(coef, 0, 0, -coef, coef *
                      field_width / 2.0, coef * field_height / 2.0))
 
