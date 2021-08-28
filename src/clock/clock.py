@@ -74,9 +74,11 @@ class Clock():
         self.set_time(datetime.datetime.now())
 
     def set_dial_name(self, name):
+        if name == "":
+            name = "none.png"
         if name != self.__dial_name:
             with self.__lock:
-                self.__dial_name = name if name != "" else "none.png"
+                self.__dial_name = name
                 self.__dial_output = False
 
     def execute_dial(self):
