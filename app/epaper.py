@@ -27,11 +27,12 @@ class EpaperArea(Gtk.DrawingArea):
                     img = cairo.ImageSurface.create_from_png(file_path)
                     coef = min(aw / (img.get_width() * 2),
                                ah / (img.get_height() * 2))
-                    x = (0 if i % 2 == 1 else img.get_width()) + \
-                        (aw - coef * img.get_width() * 2.0) / 2.0
-                    y = (0 if 2 < i else img.get_height()) + \
-                        (ah - coef * img.get_height() * 2.0) / 2.0
+                    offset_x = (aw - coef * img.get_width() * 2.0) / 2.0
+                    offset_y = (ah - coef * img.get_height() * 2.0) / 2.0
+                    x = (0 if i % 2 == 1 else img.get_width())
+                    y = (0 if 2 < i else img.get_height())
                     cr.identity_matrix()
+                    cr.translate(offset_x, offset_y)
                     cr.scale(coef, coef)
                     cr.translate(x, y)
                     cr.set_source_rgb(1.0, 1.0, 1.0)
