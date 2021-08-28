@@ -1,4 +1,3 @@
-import fcntl
 import os
 import cairo
 import gi
@@ -24,17 +23,15 @@ class EpaperArea(Gtk.DrawingArea):
             file_path = os.path.dirname(
                 __file__) + "/../.out/" + str(i) + ".png"
             if os.path.isfile(file_path):
-                with open(file_path) as f:
-                    fcntl.flock(f, fcntl.LOCK_EX)
+                try:
                     img = cairo.ImageSurface.create_from_png(file_path)
                     coef = min(aw / (img.get_width() * 2),
                                ah / (img.get_height() * 2))
-                    x = 0 if i % 2 == 1 else img.get_width()
-                    y = 0 if 2 < i else img.get_height()
+                    x = (0 if i % 2 == 1 else img.get_width()) + \
+                        (aw - coef * img.get_width() * 2.0) / 2.0
+                    y = (0 if 2 < i else img.get_height()) + \
+                        (ah - coef * img.get_height() * 2.0) / 2.0
                     cr.identity_matrix()
-                    offset_x = (aw - coef * img.get_width() * 2.0) / 2.0
-                    offset_y = (ah - coef * img.get_height() * 2.0) / 2.0
-                    cr.translate(offset_x, offset_y)
                     cr.scale(coef, coef)
                     cr.translate(x, y)
                     cr.set_source_rgb(1.0, 1.0, 1.0)
@@ -42,7 +39,8 @@ class EpaperArea(Gtk.DrawingArea):
                     cr.fill()
                     cr.set_source_surface(img)
                     cr.paint()
-                    fcntl.flock(f, fcntl.LOCK_UN)
+                except:
+                    pass
         return False
 
 

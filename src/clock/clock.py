@@ -90,40 +90,44 @@ class Clock():
         dial_path = os.path.dirname(
             __file__) + "/../assets/" + self.__dial_name
         if os.path.isfile(dial_path):
-            img = cairo.ImageSurface.create_from_png(dial_path)
-            coef = (AW / img.get_width()) * (DIAMETER / EW)
+            try:
+                img = cairo.ImageSurface.create_from_png(dial_path)
+                coef = (AW / img.get_width()) * (DIAMETER / EW)
 
-            def rotation2d(dir):
-                cos = np.cos(dir)
-                sin = np.sin(dir)
-                return np.array([[cos, -sin],
-                                 [sin,  cos]])
+                def rotation2d(dir):
+                    cos = np.cos(dir)
+                    sin = np.sin(dir)
+                    return np.array([[cos, -sin],
+                                    [sin,  cos]])
 
-            os.makedirs(os.path.dirname(__file__) +
-                        "/../../.out/", exist_ok=True)
+                os.makedirs(os.path.dirname(__file__) +
+                            "/../../.out/", exist_ok=True)
 
-            def make_out(theta, file_name):
-                surface = cairo.ImageSurface(cairo.Format.ARGB32, AW, AH)
-                ctx = cairo.Context(surface)
-                ctx.scale(coef, coef)
-                ctx.rotate(theta)
-                ctx.translate(-img.get_width() / 2.0, -img.get_width() / 2.0)
-                trans = np.dot(rotation2d(-theta),
-                               np.array([17.5, 122.5]) * img.get_width() / DIAMETER)
-                ctx.translate(trans[0], trans[1])
-                ctx.set_source_surface(img)
-                ctx.paint()
-                file_path = os.path.dirname(
-                    __file__) + "/../../.out/" + file_name
-                with open(file_path, "wb") as f:
-                    fcntl.flock(f, fcntl.LOCK_EX)
-                    surface.write_to_png(file_path)
-                    fcntl.flock(f, fcntl.LOCK_UN)
-            make_out(0.0, "1.png")
-            make_out(0.5 * math.pi, "2.png")
-            make_out(1.0 * math.pi, "3.png")
-            make_out(1.5 * math.pi, "4.png")
-            self.__dial_output = True
+                def make_out(theta, file_name):
+                    surface = cairo.ImageSurface(cairo.Format.ARGB32, AW, AH)
+                    ctx = cairo.Context(surface)
+                    ctx.scale(coef, coef)
+                    ctx.rotate(theta)
+                    ctx.translate(-img.get_width() / 2.0, -
+                                  img.get_width() / 2.0)
+                    trans = np.dot(rotation2d(-theta),
+                                   np.array([17.5, 122.5]) * img.get_width() / DIAMETER)
+                    ctx.translate(trans[0], trans[1])
+                    ctx.set_source_surface(img)
+                    ctx.paint()
+                    file_path = os.path.dirname(
+                        __file__) + "/../../.out/" + file_name
+                    with open(file_path, "wb") as f:
+                        fcntl.flock(f, fcntl.LOCK_EX)
+                        surface.write_to_png(file_path)
+                        fcntl.flock(f, fcntl.LOCK_UN)
+                make_out(0.0, "1.png")
+                make_out(0.5 * math.pi, "2.png")
+                make_out(1.0 * math.pi, "3.png")
+                make_out(1.5 * math.pi, "4.png")
+                self.__dial_output = True
+            except:
+                pass
 
     def execute_hands(self):
         with self.__lock:

@@ -46,17 +46,20 @@ class ClockArea(Gtk.DrawingArea):
         dial_path = os.path.dirname(
             __file__) + "/../assets/" + self.__clk.dial_name()
         if os.path.isfile(dial_path):
-            img = cairo.ImageSurface.create_from_png(dial_path)
-            prev_coef = coef
-            coef = min((aw - 2.0 * line_width * coef) / img.get_width(),
-                       (ah - 2.0 * line_width * coef) / img.get_height())
-            cr.identity_matrix()
-            cr.translate(offset_x, offset_y)
-            cr.scale(coef, coef)
-            cr.translate(line_width * prev_coef / coef,
-                         line_width * prev_coef / coef)
-            cr.set_source_surface(img)
-            cr.paint()
+            try:
+                img = cairo.ImageSurface.create_from_png(dial_path)
+                prev_coef = coef
+                coef = min((aw - 2.0 * line_width * coef) / img.get_width(),
+                           (ah - 2.0 * line_width * coef) / img.get_height())
+                cr.identity_matrix()
+                cr.translate(offset_x, offset_y)
+                cr.scale(coef, coef)
+                cr.translate(line_width * prev_coef / coef,
+                             line_width * prev_coef / coef)
+                cr.set_source_surface(img)
+                cr.paint()
+            except:
+                pass
 
         cr.identity_matrix()
         coef = min(aw / field_width, ah / field_height)
