@@ -115,7 +115,7 @@ class Window(Gtk.Window):
     def __init__(self, __clk):
         Gtk.Window.__init__(self)
         self.set_title("GakuseiGuild Magic clock")
-        self.set_default_size(800, 600)
+        self.set_default_size(600, 600)
         self.connect("destroy", Gtk.main_quit)
 
         ca = ClockArea(__clk)
