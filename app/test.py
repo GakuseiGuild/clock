@@ -24,7 +24,7 @@ while True:
     file_path = os.path.dirname(__file__) + "/../.out/name"
     with open(file_path) as f:
         name = f.read()
-        flag = prev_name != name
+        flag = prev_name != name and name != ""
         prev_name = name
 
     if flag:
