@@ -29,9 +29,6 @@ while True:
 
     if flag:
         try:
-            logging.info("Clear")
-            epd.Clear()
-
             logging.info(prev_name)
             file_path = os.path.dirname(__file__) + "/../.out/" + str(i)
             img = Image.open(file_path + ".png")
