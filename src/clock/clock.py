@@ -167,3 +167,5 @@ class Clock():
         th1 = threading.Thread(target=self.execute_hands, daemon=True)
         th0.start()
         th1.start()
+        th0.join()
+        th1.join()
