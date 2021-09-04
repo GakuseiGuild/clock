@@ -39,7 +39,6 @@ while True:
 
             Himage = Image.open(file_path + ".bmp")
             epd.display(epd.getbuffer(Himage))
-            time.sleep(3)
 
         except IOError as e:
             logging.info(e)
