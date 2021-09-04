@@ -32,7 +32,7 @@ while True:
             logging.info(prev_name)
             file_path = os.path.dirname(__file__) + "/../.out/" + str(i)
             img = Image.open(file_path + ".png")
-            r, g, b, a = img.split()
+            r, g, b = img.split()
             img = Image.merge("RGB", (r, g, b))
             img = img.resize((600, 448))
             img.save(file_path + ".bmp")
