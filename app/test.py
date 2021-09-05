@@ -20,8 +20,7 @@ epd = epd5in65f.EPD()
 epd.init()
 
 while True:
-    file_path = os.path.dirname(__file__) + "/../.out/name"
-    with open(file_path) as f:
+    with open(os.path.dirname(__file__) + "/../.out/name") as f:
         name = f.read()
         flag = prev_name != name and name != ""
         prev_name = name
@@ -29,15 +28,11 @@ while True:
     if flag:
         try:
             logging.info(prev_name)
-            file_path = os.path.dirname(__file__) + "/../.out/" + str(i)
-            img = Image.open(file_path + ".png")
-            r, g, b = img.split()
-            img = Image.merge("RGB", (r, g, b))
-            img = img.resize((600, 448))
-            img.save(file_path + ".bmp")
-
-            Himage = Image.open(file_path + ".bmp")
-            epd.display(epd.getbuffer(Himage))
+            file_path = os.path.dirname(
+                __file__) + "/../.out/" + str(i) + ".png"
+            r, g, b = Image.open(file_path).split()
+            img = Image.merge("RGB", (r, g, b)).resize((600, 448))
+            epd.display(epd.getbuffer(img))
 
         except IOError as e:
             logging.info(e)
