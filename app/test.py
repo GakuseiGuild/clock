@@ -1,5 +1,4 @@
 from PIL import Image
-import time
 import logging
 import sys
 import os
