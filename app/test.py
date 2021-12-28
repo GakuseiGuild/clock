@@ -14,8 +14,8 @@ from waveshare_epd import epd5in65f  # nopep8
 
 logging.basicConfig(level=logging.DEBUG)
 
-# 電子ペーパーの [位置，CS ピン]
-positions = [[1, 7], [2, 8], [3, 9], [4, 10]]
+# 電子ペーパーの [位置，CS ピン, BUSY ピン]
+positions = [[1, 14, 12], [2, 15, 16], [3, 18, 20], [4, 23, 21]]
 
 lock = threading.RLock()
 
@@ -31,6 +31,12 @@ def display_epaper(pos):
     GPIO = RPi.GPIO
     GPIO.setup(cs_pin, GPIO.OUT)
     wiringpi.digitalWrite(cs_pin, 1)
+    # BUSY
+    busy_pin = pos[2]
+    epd.cs_pin(busy_pin)
+    GPIO = RPi.GPIO
+    GPIO.setup(busy_pin, GPIO.OUT)
+    wiringpi.digitalWrite(busy_pin, 1)
 
     while True:
         with open(os.path.dirname(__file__) + "/../.out/name") as f:
