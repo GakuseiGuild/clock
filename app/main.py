@@ -8,18 +8,24 @@ from src.gui import clock as gui  # nopep8
 
 
 def main():
+    args = sys.argv
+    # GUI を無効にするか
+    is_headless = False
+    for arg in args:
+        is_headless =  arg == "--headless"
+
     # 制御周期
     cycle = 1.0 / 60.0
     clk = clock.Clock(cycle)
 
-    win = gui.Window(clk)
-
     threads = []
-    threads.append(threading.Thread(name="gui", target=win.main))
+    if not is_headless:
+        win = gui.Window(clk)
+        threads.append(threading.Thread(name="gui", target=win.main))
     threads.append(threading.Thread(
-        name="clock", target=driver.run_clock, args=(clk, cycle), daemon=True))
+        name="clock", target=driver.run_clock, args=(clk, cycle), daemon=(not is_headless)))
     threads.append(threading.Thread(
-        name="action", target=driver.run_action, args=(clk, cycle), daemon=True))
+        name="action", target=driver.run_action, args=(clk, cycle), daemon=(not is_headless)))
     for th in threads:
         th.start()
 
