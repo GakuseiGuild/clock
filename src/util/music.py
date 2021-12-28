@@ -3,10 +3,10 @@ import os
 
 def play_music(music_name):
     pygame.mixer.init()
-    midi_path = os.path.dirname(__file__) + "/../assets/midi/" + music_name
-    if not os.path.isfile(midi_path):
+    music_path = os.path.dirname(__file__) + "/../assets/music/" + music_name
+    if not os.path.isfile(music_path):
         return
-    pygame.mixer.music.load(midi_path)
+    pygame.mixer.music.load(music_path)
     pygame.mixer.music.play()
     print('music stop')
 
