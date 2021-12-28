@@ -33,7 +33,7 @@ def display_epaper(pos, cs_pin, busy_pin):
     # BUSY
     epd.busy_pin = busy_pin
     GPIO.setup(busy_pin, GPIO.IN)
-    wiringpi.digitalWrite(busy_pin, 1)
+
     epd.init()
 
     while True:
