@@ -90,7 +90,7 @@ class Clock():
         if self.__dial_output == True:
             return
         dial_path = os.path.dirname(
-            __file__) + "/../assets/" + self.__dial_name
+            __file__) + "/../assets/pic/" + self.__dial_name
         if os.path.isfile(dial_path):
             try:
                 img = cairo.ImageSurface.create_from_png(dial_path)
