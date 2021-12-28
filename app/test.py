@@ -19,27 +19,25 @@ positions = [[1, 14, 12], [2, 15, 16], [3, 18, 20], [4, 23, 21]]
 
 lock = threading.RLock()
 
-def display_epaper(pos):
+def display_epaper(pos, cs_pin, busy_pin):
     prev_name = ""
     flag = False
     epd = epd5in65f.EPD()
-    epd.init()
 
-    # CS
-    cs_pin = pos[1]
-    epd.cs_pin(cs_pin)
     GPIO = RPi.GPIO
+    GPIO.setmode(GPIO.BCM)
+    # CS
+    epd.cs_pin = cs_pin
     GPIO.setup(cs_pin, GPIO.OUT)
     wiringpi.digitalWrite(cs_pin, 1)
     # BUSY
-    busy_pin = pos[2]
-    epd.cs_pin(busy_pin)
-    GPIO = RPi.GPIO
-    GPIO.setup(busy_pin, GPIO.OUT)
+    epd.busy_pin = busy_pin
+    GPIO.setup(busy_pin, GPIO.IN)
     wiringpi.digitalWrite(busy_pin, 1)
+    epd.init()
 
     while True:
-        with open(os.path.dirname(__file__) + "/../.out/name") as f:
+        with open(os.path.dirname(os.path.abspath("__file__")) + "/.out/name") as f:
             name = f.read()
             flag = prev_name != name and name != ""
             prev_name = name
@@ -48,7 +46,7 @@ def display_epaper(pos):
             try:
                 logging.info(prev_name)
                 file_path = os.path.dirname(
-                    __file__) + "/../.out/" + str(pos[0]) + ".png"
+                    os.path.abspath("__file__")) + "/.out/" + str(pos) + ".png"
                 r, g, b = Image.open(file_path).split()
                 img = Image.merge("RGB", (r, g, b)).resize((600, 448))
                 with lock:
@@ -66,6 +64,6 @@ def display_epaper(pos):
 
 threads = []
 for pos in positions:
-    threads.append(threading.Thread(target=display_epaper, args=(pos)))
+    threads.append(threading.Thread(target=display_epaper, args=(pos[0], pos[1], pos[2])))
 for thread in threads:
     thread.start()
