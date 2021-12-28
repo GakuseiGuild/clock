@@ -128,8 +128,9 @@ class Clock():
                 make_out(1.0 * math.pi, "3.png")
                 make_out(1.5 * math.pi, "4.png")
                 self.__dial_output = True
-                with open(os.path.dirname(__file__) + "/../../.out/name", "w") as f:
-                    f.write(self.__dial_name)
+                for i in range(1, 5):
+                    with open(os.path.dirname(__file__) + "/../../.out/name" + str(i), "w") as f:
+                        f.write(self.__dial_name)
             except:
                 pass
 

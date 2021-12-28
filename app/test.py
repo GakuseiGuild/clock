@@ -36,23 +36,20 @@ def display_epaper(pos, cs_pin, busy_pin):
 
     epd.init()
 
+    file_path = os.path.dirname(
+        os.path.abspath("__file__")) + "/.out/" + str(pos) + ".png"
     while True:
-        with open(os.path.dirname(os.path.abspath("__file__")) + "/.out/name") as f:
+        with open(os.path.dirname(os.path.abspath("__file__")) + "/.out/name" + str(pos)) as f:
             name = f.read()
             flag = prev_name != name and name != ""
             prev_name = name
 
         if flag:
             try:
-                logging.info(prev_name)
-                file_path = os.path.dirname(
-                    os.path.abspath("__file__")) + "/.out/" + str(pos) + ".png"
+                logging.info(str(pos) + ": " + prev_name)
                 r, g, b = Image.open(file_path).split()
                 img = Image.merge("RGB", (r, g, b)).resize((600, 448))
-                with lock:
-                    wiringpi.digitalWrite(cs_pin, 0)
-                    epd.display(epd.getbuffer(img))
-                    wiringpi.digitalWrite(cs_pin, 1)
+                epd.display(epd.getbuffer(img), lock)
 
             except IOError as e:
                 logging.info(e)
