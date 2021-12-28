@@ -69,24 +69,3 @@ class step_motor():
                 elif self.__angular_velocity < 0:
                     self.__rotate_one_step(False)
                     time.sleep(2*math.pi/self.__number_of_per_rev/math.fabs(self.__angular_velocity))
-
-def main():
-    motor_for_long = step_motor(step_motor_pin_number(A=21,B=20,C=16,D=12))
-    threads = []
-    threads.append(threading.Thread(name="step_motor",target=motor_for_long.start))
-    print("start")
-    for th in threads:
-        th.start()
-    while True:
-        motor_for_long.angular_velocity = 2*3.14/60
-        time.sleep(1)
-        motor_for_long.angular_velocity = 0
-        time.sleep(1)
-        motor_for_long.angular_velocity = -2*3.14/60
-        time.sleep(1)
-        motor_for_long.angular_velocity = 0
-        time.sleep(1)
-    
-
-if __name__ == "__main__":
-    main()
