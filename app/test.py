@@ -12,7 +12,7 @@ if os.path.exists(libdir):
 
 from waveshare_epd import epd5in65f  # nopep8
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 # 電子ペーパーの [位置，CS ピン, BUSY ピン]
 positions = [[1, 14, 12], [2, 15, 16], [3, 18, 20], [4, 23, 21]]
