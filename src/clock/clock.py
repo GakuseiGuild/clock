@@ -22,7 +22,7 @@ class Clock():
         self.__cycle = cycle
         # 加速度制限 [rad/s^2]
         self.__acc = Dir(long=1.0, short=1.0)
-        # 速度制限 [rad/s^2]
+        # 速度制限 [rad/s]
         self.__vel_max = Dir(long=1.0, short=1.0)
         # 目標速度 [rad/s]
         self.__target_vel = Dir(long=0.0, short=0.0)
