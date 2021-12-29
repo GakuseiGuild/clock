@@ -18,10 +18,8 @@ class step_motor():
     def __init__(self,pin:step_motor_pin_number):
         self.__pin = pin
         self.__pi1 = pigpio.pi()
-        self.__pi1.set_mode(pin[0], pigpio.OUTPUT)
-        self.__pi1.set_mode(pin[1], pigpio.OUTPUT)
-        self.__pi1.set_mode(pin[2], pigpio.OUTPUT)
-        self.__pi1.set_mode(pin[3], pigpio.OUTPUT)
+        for p in pin:
+            self.__pi1.set_mode(p, pigpio.OUTPUT)
         self.__number_of_per_rev = 4096
         self.__angular_velocity = 0.0
         self.__angular_velocity_max = 20*math.pi/4.0
