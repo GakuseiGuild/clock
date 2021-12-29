@@ -23,7 +23,10 @@ def run_clock(clk, cycle):
         time.sleep(max(0.0, cycle - (time.time() - start)))
 
 def run_motor(clk, cycle):
-    motor = stepmotor() 
+    pin0 = stepmotor.step_motor_pin_number(A=26,B=19,C=13,D=6)
+    pin1 = stepmotor.step_motor_pin_number(A=5,B=24,C=7,D=8)
+    motor0 = stepmotor.step_motor(pin0) 
+    motor1 = stepmotor.step_motor(pin1) 
     while True:
-        motor.angular_velocity(clk.vel())
-        motor.execute()
+        motor0.execute(clk.vel().long, cycle)
+        motor1.execute(clk.vel().short, cycle)
