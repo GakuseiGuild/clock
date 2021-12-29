@@ -62,10 +62,8 @@ class step_motor():
 
     # 各ピンに出力
     def __write(self):
-        self.__pi1.write(self.__pin.A,self.__state[self.__count][0])
-        self.__pi1.write(self.__pin.B,self.__state[self.__count][1])
-        self.__pi1.write(self.__pin.C,self.__state[self.__count][2])
-        self.__pi1.write(self.__pin.D,self.__state[self.__count][3])
+        for i, pin in enumerate(self.__pin):
+            self.__pi1.write(pin, self.__state[self.__count][i])
 
     # ループ
     def start(self):
