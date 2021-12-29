@@ -12,7 +12,7 @@ def main():
     # GUI を無効にするか
     is_headless = False
     for arg in args:
-        is_headless =  arg == "--headless"
+        is_headless = arg == "--headless"
 
     # 制御周期
     cycle = 1.0 / 60.0
@@ -26,6 +26,8 @@ def main():
         name="clock", target=driver.run_clock, args=(clk, cycle), daemon=(not is_headless)))
     threads.append(threading.Thread(
         name="action", target=driver.run_action, args=(clk, cycle), daemon=(not is_headless)))
+    threads.append(threading.Thread(
+        name="motor", target=driver.run_motor, args=(clk, cycle), daemon=(not is_headless)))
     for th in threads:
         th.start()
 

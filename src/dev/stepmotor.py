@@ -65,17 +65,12 @@ class step_motor():
         for i, pin in enumerate(self.__pin):
             self.__pi1.write(pin, self.__state[self.__count][i])
 
-    # ループ
-    def start(self):
-        while True:
-            sleep_time = 0
-            # 角速度を判断している間に値が変わらないようにlock
-            with self.__lock:
-                if self.__angular_velocity > 0:
-                    self.__rotate_one_step(True)
-                    sleep_time = 2*math.pi/self.__number_of_per_rev/math.fabs(self.__angular_velocity)
-                elif self.__angular_velocity < 0:
-                    self.__rotate_one_step(False)
-                    sleep_time = 2*math.pi/self.__number_of_per_rev/math.fabs(self.__angular_velocity)
-                # self.__angular_velocity == 0 の時は回転させずに，sleep_time は 0 のままにする
-            time.sleep(sleep_time)
+    def execute(self):
+        sleep_time = 0
+        # 角速度を判断している間に値が変わらないようにlock
+        with self.__lock:
+            self.__rotate_one_step(self.__angular_velocity > 0)
+            sleep_time = 2*math.pi/self.__number_of_per_rev/math.fabs(self.__angular_velocity)
+
+            # self.__angular_velocity == 0 の時は回転させずに，sleep_time は 0 のままにする
+        time.sleep(sleep_time)
