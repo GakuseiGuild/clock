@@ -12,7 +12,7 @@ def main():
     # GUI を無効にするか
     is_headless = False
     for arg in args:
-        is_headless =  arg == "--headless"
+        is_headless = arg == "--headless"
 
     # 制御周期
     cycle = 1.0 / 60.0
