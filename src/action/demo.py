@@ -16,17 +16,18 @@ class Demo(base.Base):
     def execute(self):
         # 前回の state を保存しておく
         state = self.__state
+        print(state)
 
         if self.__state == 0:
             if time.time() - self.__changed_time > 5.0:
                 self.__state = 1
             self._clk.set_dial_name("")
-            self._clk.set_target_dir(long=math.pi, short=0.0)
+            self._clk.set_target_dir(long=math.pi, short=math.pi)
         elif self.__state == 1:
             if time.time() - self.__changed_time > 6.0:
                 self.__state = 2
             self._clk.set_dial_name("")
-            self._clk.set_target_vel(long=1.0, short=1.0)
+            self._clk.set_target_dir(long=0.0, short=0.0)
         elif self.__state == 2:
             if time.time() - self.__changed_time > 3.0:
                 self.__state = 3

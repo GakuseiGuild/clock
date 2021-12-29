@@ -6,23 +6,23 @@ import warnings
 from typing import NamedTuple
 
 # ステッピングモーターのピン番号構造
-class step_motor_pin_number(NamedTuple):
+class stepmotor_pin_number(NamedTuple):
     A: int
     B: int
     C: int
     D: int
 
 # ステッピングモーターのクラス
-class step_motor():
+class stepmotor():
     # 初期化
-    def __init__(self,pin:step_motor_pin_number):
+    def __init__(self,pin:stepmotor_pin_number):
         self.__pin = pin
         self.__pi1 = pigpio.pi()
         for p in pin:
             self.__pi1.set_mode(p, pigpio.OUTPUT)
         self.__number_of_per_rev = 4096
         self.__angular_velocity = 0.0
-        self.__angular_velocity_max = 20*math.pi/4.0
+        self.__angular_velocity_max = 2*math.pi/4.0
         self.__lock = threading.RLock()
         # 各ステップでのピン出力の定義
         self.__state = [[1,0,0,0],[1,1,0,0],[0,1,0,0],[0,1,1,0],[0,0,1,0],[0,0,1,1],[0,0,0,1],[1,0,0,1]]
@@ -47,7 +47,7 @@ class step_motor():
                 warnings.warn("The specified angular velocity exceeds the upper limit.")
             else:
                 self.__angular_velocity = angular_velocity
-    
+   
     # 1ステップ回転
     def __rotate_one_step(self,clockwise:bool):
         if clockwise:
@@ -68,10 +68,9 @@ class step_motor():
     def execute(self, vel, cycle):
         dtheta = 2.0 *  math.pi / self.__number_of_per_rev
         pulse_count = int(abs(vel * cycle / dtheta))
-        with self.__lock:
+        time.sleep(cycle / (pulse_count + 1))
+        for i in range(pulse_count):
+            self.__rotate_one_step(vel > 0)
             time.sleep(cycle / (pulse_count + 1))
-            for i in range(pulse_count):
-                self.__rotate_one_step(vel > 0)
-                time.sleep(cycle / (pulse_count + 1))
-        return pulse_count * dtheta * (vel > 0 if 1.0 else -1.0)
+        return pulse_count * dtheta * (1.0 if vel > 0 else -1.0)
 

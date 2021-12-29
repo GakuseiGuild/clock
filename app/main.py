@@ -19,8 +19,8 @@ def main():
     cycle = 1.0 / 60.0
     clk = clock.Clock(cycle)
     
-    pin_long = stepmotor.step_motor_pin_number(A=26,B=19,C=13,D=6)
-    pin_short = stepmotor.step_motor_pin_number(A=5,B=24,C=7,D=8)
+    pin_long = stepmotor.stepmotor_pin_number(A=26,B=19,C=13,D=6)
+    pin_short = stepmotor.stepmotor_pin_number(A=5,B=24,C=7,D=8)
 
     threads = []
     if not is_headless:
