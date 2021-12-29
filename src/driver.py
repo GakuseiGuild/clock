@@ -22,11 +22,17 @@ def run_clock(clk, cycle):
 
         time.sleep(max(0.0, cycle - (time.time() - start)))
 
-def run_motor(clk, cycle):
-    pin0 = stepmotor.step_motor_pin_number(A=26,B=19,C=13,D=6)
-    pin1 = stepmotor.step_motor_pin_number(A=5,B=24,C=7,D=8)
-    motor0 = stepmotor.step_motor(pin0) 
-    motor1 = stepmotor.step_motor(pin1) 
+def run_long_hand(clk, cycle, pin):
+    motor = stepmotor.step_motor(pin) 
+    hand_dir = 0.0
     while True:
-        motor0.execute(clk.vel().long, cycle)
-        motor1.execute(clk.vel().short, cycle)
+        hand_dir += motor.execute(clk.vel().long, cycle)
+        clk.set_long_dir(hand_dir)
+
+def run_short_hand(clk, cycle, pin):
+    motor = stepmotor.step_motor(pin) 
+    hand_dir = 0.0
+    while True:
+        hand_dir += motor.execute(clk.vel().short, cycle)
+        clk.set_short_dir(hand_dir)
+

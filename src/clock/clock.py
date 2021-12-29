@@ -66,6 +66,20 @@ class Clock():
             self.__target_vel = target
             self.__target_dir = None
 
+    def set_dir(self, dir=None, long=0.0, short=0.0):
+        if dir == None:
+            dir = Dir(long=long, short=short)
+        with self.__lock:
+            self.__dir = dir
+    
+    def set_long_dir(self, long_dir):
+        with self.__lock:
+            self.__dir = Dir(long=long_dir, short=self.__dir.short)
+
+    def set_short_dir(self, short_dir):
+        with self.__lock:
+            self.__dir = Dir(long=self.__dir.long, short=short_dir)
+
     def set_target_dir(self, target=None, long=0.0, short=0.0):
         if target == None:
             target = Dir(long=long, short=short)
@@ -171,7 +185,7 @@ class Clock():
                 self.__dir.long + self.__cycle * self.__vel.long)
             short = angle.wrap_to_2pi(
                 self.__dir.short + self.__cycle * self.__vel.short)
-            self.__dir = Dir(long=long, short=short)
+            # self.__dir = Dir(long=long, short=short)
 
     def execute(self):
         th0 = threading.Thread(target=self.execute_dial, daemon=True)

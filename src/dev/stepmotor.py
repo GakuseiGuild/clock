@@ -66,14 +66,12 @@ class step_motor():
             self.__pi1.write(pin, self.__state[self.__count][i])
 
     def execute(self, vel, cycle):
-        # 角速度を判断している間に値が変わらないようにlock
-        dtheta = (1.0 / self.__number_of_per_rev) * math.pi / 180.0
-        hz = vel / (dtheta * 60.0)
-        pulse_count = abs(hz * cycle)
+        dtheta = 2.0 *  math.pi / self.__number_of_per_rev
+        pulse_count = int(abs(vel * cycle / dtheta))
         with self.__lock:
             time.sleep(cycle / (pulse_count + 1))
-            for i in range(int(pulse_count)):
+            for i in range(pulse_count):
                 self.__rotate_one_step(vel > 0)
                 time.sleep(cycle / (pulse_count + 1))
-
+        return pulse_count * dtheta * (vel > 0 if 1.0 else -1.0)
 
