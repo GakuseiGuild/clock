@@ -68,10 +68,14 @@ class step_motor():
     # ループ
     def start(self):
         while True:
+            sleep_time = 0
+            # 角速度を判断している間に値が変わらないようにlock
             with self.__lock:
                 if self.__angular_velocity > 0:
                     self.__rotate_one_step(True)
-                    time.sleep(2*math.pi/self.__number_of_per_rev/math.fabs(self.__angular_velocity))
+                    sleep_time = 2*math.pi/self.__number_of_per_rev/math.fabs(self.__angular_velocity)
                 elif self.__angular_velocity < 0:
                     self.__rotate_one_step(False)
-                    time.sleep(2*math.pi/self.__number_of_per_rev/math.fabs(self.__angular_velocity))
+                    sleep_time = 2*math.pi/self.__number_of_per_rev/math.fabs(self.__angular_velocity)
+                # self.__angular_velocity == 0 の時は回転させずに，sleep_time は 0 のままにする
+            time.sleep(sleep_time)
