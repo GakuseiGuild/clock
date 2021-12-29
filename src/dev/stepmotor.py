@@ -1,8 +1,8 @@
+import math
 import pigpio
 import time
 import threading
 import warnings
-import math
 from typing import NamedTuple
 
 # ステッピングモーターのピン番号構造
