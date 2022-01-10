@@ -16,7 +16,6 @@ class Demo(base.Base):
     def execute(self):
         # 前回の state を保存しておく
         state = self.__state
-        print(state)
 
         if self.__state == 0:
             if time.time() - self.__changed_time > 5.0:
