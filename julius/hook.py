@@ -24,7 +24,7 @@ while True:
         if word != '':
             word = word[3:-4]
             # ここで単語が出てくるので，ifなりなんなりで分岐させて処理を行う
-            print("word"+word)
+            print("word" + word)
             if word == "あぶらかたぶら音楽鳴らして".decode('utf-8'):
                 print("音楽を流す")
             if word == "あぶらかたぶら時刻教えて".decode('utf-8'):
