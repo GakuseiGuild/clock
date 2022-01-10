@@ -14,13 +14,13 @@ while True:
     word = ''
     for line in res.split('/>'):
         # Juliusから取得した値から認識文字列の行を探す
-	    index = line.find('WORD=')
+        index = line.find('WORD=')
         if index != -1:
             # 認識文字列部分だけを抜き取る
             recog = line[index + 6 : line.find('"', index + 6)]
             # 文字列の開始記号以外を格納していく
-	        if recog != "を".decode('utf-8'):
-            	word += recog
+            if recog != "を".decode('utf-8'):
+                word += recog
         if word != '':
             word = word[3:-4]
             # ここで単語が出てくるので，ifなりなんなりで分岐させて処理を行う
