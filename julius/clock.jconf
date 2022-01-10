@@ -1,0 +1,7 @@
+-dfa mahou.dfa
+-v mahou.dict
+-h ../../Tools/dictation-kit-v4.3.1-linux/model/phone_m/jnas-tri-3k16-gid.binhmm
+-hlist ../../Tools/dictation-kit-v4.3.1-linux/model/phone_m/logicalTri
+-nostrip
+-input mic
+
