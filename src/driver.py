@@ -3,12 +3,14 @@ import sys
 import time
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from src.action import demo  # nopep8
+from src.action import voice  # nopep8
 from src.dev import stepmotor
 from src.util import angle
 
 
-def run_action(clk, cycle):
+def run_action(clk, cycle, julius_output):
     action = demo.Demo(clk)
+    #action = voice.Voice(clk, julius_output)
     while True:
         start = time.time()
         action.execute()
