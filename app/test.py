@@ -23,9 +23,29 @@ lock = threading.RLock()
 reset_pin = 27
 dc_pin = 25
 
+flag = False
+flag_list = [False for p in positions]
+prev_name_list = ["" for p in positions]
+
+def manage_flag():
+    while True:
+        flag = True
+        name_list = []
+        for i, p in enumerate(positions):
+            with open(os.path.dirname(os.path.abspath("__file__")) + "/.out/name" + str(p[0])) as f:
+                name = f.read()
+                # flag = prev_name != name and name != ""
+                if prev_name_list[i] == name or  name == '':
+                    flag = False
+                name_list.append(name)
+
+        if flag:
+            for i, p in enumerate(positions):
+                flag_list[i] = True
+                prev_name_list[i] = name_list[i]
+
 def display_epaper(pos, cs_pin, busy_pin):
     prev_name = ""
-    flag = False
     epd = epd5in65f.EPD()
 
     GPIO = RPi.GPIO
@@ -47,22 +67,19 @@ def display_epaper(pos, cs_pin, busy_pin):
 
     file_path = os.path.dirname(
         os.path.abspath("__file__")) + "/.out/" + str(pos) + ".png"
-    while True:
-        with open(os.path.dirname(os.path.abspath("__file__")) + "/.out/name" + str(pos)) as f:
-            name = f.read()
-            flag = prev_name != name and name != ""
-            prev_name = name
 
-        if flag:
+    while True:
+        if flag_list[pos - 1]:
+            flag_list[pos - 1] = False
+            name = prev_name_list[pos - 1]
+            logging.info(str(pos) + " begin: " + name)
             try:
-                logging.info(str(pos) + ": " + prev_name)
                 r, g, b = Image.open(file_path).split()
                 img = Image.merge("RGB", (r, g, b)).resize((600, 448))
                 epd.display(epd.getbuffer(img), lock)
-
+                logging.info(str(pos) + " end  : " + name)
             except IOError as e:
                 logging.info(e)
-
             except KeyboardInterrupt:
                 logging.info("ctrl + c:")
                 epd5in65f.epdconfig.module_exit()
@@ -71,6 +88,7 @@ def display_epaper(pos, cs_pin, busy_pin):
                 pass
 
 threads = []
+threads.append(threading.Thread(target=manage_flag))
 for pos in positions:
     threads.append(threading.Thread(target=display_epaper, args=(pos[0], pos[1], pos[2])))
 for thread in threads:
