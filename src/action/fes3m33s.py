@@ -12,6 +12,8 @@ class Fes3m33s(base.Base):
         super().__init__(clk)
         self.__changed_time = time.time()
         self.__state = 0
+        self.__stopped = False
+        self.__stopped_time = time.time()
 
     def execute(self):
         # 前回の state を保存しておく
@@ -29,12 +31,23 @@ class Fes3m33s(base.Base):
         elif self.__state == 1:
             # カウント
             count_sec = 213.0
+            if self._clk.button_1_clicked:
+                self.__stopped = not self.__stopped
+                if self.__stopped:
+                    self.__stopped_time = time.time()
+            if self.__stopped:
+                self.__changed_time += self._clk.cycle()
             if time.time() - self.__changed_time > count_sec:
-                self.__state = 0
+                self.__state = 2
             self._clk.set_dial_name("20%.png")
             target_dir_long = -(time.time() - self.__changed_time) * 2.0 * math.pi / count_sec + math.pi / 2.0
-            target_dir_short = -(time.time() - self.__changed_time) * 2.0 * math.pi / 60.0 + math.pi / 2.0
+            target_dir_short = (time.time() - self.__changed_time) * 2.0 * math.pi / count_sec + math.pi / 2.0
             self._clk.set_target_dir(long=target_dir_long, short=target_dir_short)
+        elif self.__state == 2:
+            # 終了後の停止
+            self._clk.set_target_vel(long=0.0, short=0.0)
+            if self._clk.button_1_clicked:
+                self.__state = 0
         else:
             self.__state = 0
 

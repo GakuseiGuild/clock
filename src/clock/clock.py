@@ -43,6 +43,9 @@ class Clock():
 
         self.__lock = threading.RLock()
 
+    def cycle(self):
+        return self.__cycle
+
     def target_vel(self):
         with self.__lock:
             return self.__target_vel
