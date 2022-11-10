@@ -43,7 +43,7 @@ class Demo(base.Base):
         elif self.__state == 4:
             if time.time() - self.__changed_time > change_time:
                 self.__state = 0
-            self._clk.set_dial_name("clock_reversed.png")
+            self._clk.set_dial_name("20%.png")
             self._clk.set_now()
         else:
             self.__state = 0
