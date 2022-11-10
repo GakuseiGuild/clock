@@ -106,16 +106,16 @@ class Clock():
                 self.__dial_output = False
 
     def tune_long_left(self):
-        self.set_long_dir(self.__dir.long + 0.05)
+        self.set_long_dir(angle.wrap_to_2pi(self.__dir.long + 0.05))
 
     def tune_long_right(self):
-        self.set_long_dir(self.__dir.long - 0.05)
+        self.set_long_dir(angle.wrap_to_2pi(self.__dir.long - 0.05))
 
     def tune_short_left(self):
-        self.set_short_dir(self.__dir.short + 0.05)
+        self.set_short_dir(angle.wrap_to_2pi(self.__dir.short + 0.05))
 
     def tune_short_right(self):
-        self.set_short_dir(self.__dir.short - 0.05)
+        self.set_short_dir(angle.wrap_to_2pi(self.__dir.short - 0.05))
 
     def execute_dial(self):
         AW = 600  # px 電子ペーパーの幅
