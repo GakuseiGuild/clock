@@ -19,7 +19,7 @@ class Dir(NamedTuple):
 class Clock():
     def __init__(self, cycle):
         # 制御を進行するか
-        self.run_flag = True
+        self.run_flag = False
         # 制御周期
         self.__cycle = cycle
         # 加速度制限 [rad/s^2]
