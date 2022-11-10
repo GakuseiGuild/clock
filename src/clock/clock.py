@@ -18,6 +18,8 @@ class Dir(NamedTuple):
 
 class Clock():
     def __init__(self, cycle):
+        # 制御を進行するか
+        self.run_flag = True
         # 制御周期
         self.__cycle = cycle
         # 加速度制限 [rad/s^2]
@@ -102,6 +104,18 @@ class Clock():
             with self.__lock:
                 self.__dial_name = name
                 self.__dial_output = False
+
+    def tune_long_left(self):
+        self.set_long_dir(self.__dir.long + 0.05)
+
+    def tune_long_right(self):
+        self.set_long_dir(self.__dir.long - 0.05)
+
+    def tune_short_left(self):
+        self.set_short_dir(self.__dir.short + 0.05)
+
+    def tune_short_right(self):
+        self.set_short_dir(self.__dir.short - 0.05)
 
     def execute_dial(self):
         AW = 600  # px 電子ペーパーの幅

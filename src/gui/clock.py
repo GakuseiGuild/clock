@@ -78,7 +78,7 @@ class ClockArea(Gtk.DrawingArea):
         target_short = np.dot(rotation2d(self.__clk.dir().short),
                               np.array([0.5 * rad, 0.0]))
 
-        cr.set_source_rgb(0.0, 0.0, 0.0)
+        cr.set_source_rgb(0.5, 0.5, 0.5)
 
         # title
         text = "GakuseiGuild"
@@ -112,14 +112,66 @@ class ClockArea(Gtk.DrawingArea):
 
 
 class Window(Gtk.Window):
-    def __init__(self, __clk):
+    def __init__(self, clk):
         Gtk.Window.__init__(self)
         self.set_title("GakuseiGuild Magic clock")
         self.set_default_size(600, 600)
         self.connect("destroy", Gtk.main_quit)
 
-        ca = ClockArea(__clk)
-        self.add(ca)
+        ca = ClockArea(clk)
+
+        button_change_action = Gtk.Button()
+        button_change_action.set_label('Change action')
+
+        def toggle_run(widget, data=None):
+            clk.run_flag = not clk.run_flag
+        button_toggle_run = Gtk.Button()
+        button_toggle_run.set_label('Toggle run')
+        button_toggle_run.connect('clicked', toggle_run)
+
+        def tune_long_left(widget, data=None):
+            if not clk.run_flag:
+                clk.tune_long_left()
+        def tune_long_right(widget, data=None):
+            if not clk.run_flag:
+                clk.tune_long_right()
+        def tune_short_left(widget, data=None):
+            if not clk.run_flag:
+                clk.tune_short_left()
+        def tune_short_right(widget, data=None):
+            if not clk.run_flag:
+                clk.tune_short_right()
+        button_tune_long_left = Gtk.Button()
+        button_tune_long_left.set_label('Tune long left')
+        button_tune_long_left.connect('clicked', tune_long_left)
+        button_tune_long_right = Gtk.Button()
+        button_tune_long_right.set_label('Tune long right')
+        button_tune_long_right.connect('clicked', tune_long_right)
+        button_tune_short_left = Gtk.Button()
+        button_tune_short_left.set_label('Tune short left')
+        button_tune_short_left.connect('clicked', tune_short_left)
+        button_tune_short_right = Gtk.Button()
+        button_tune_short_right.set_label('Tune short right')
+        button_tune_short_right.connect('clicked', tune_short_right)
+ 
+        button_box = Gtk.VBox()
+        button_box.add(button_change_action)
+        button_box.add(button_toggle_run)
+        tune_long_box = Gtk.HBox()
+        tune_long_box.add(button_tune_long_left)
+        tune_long_box.add(button_tune_long_right)
+        tune_short_box = Gtk.HBox()
+        tune_short_box.add(button_tune_short_left)
+        tune_short_box.add(button_tune_short_right)
+        button_box.add(tune_long_box)
+        button_box.add(tune_short_box)
+
+        vbox = Gtk.VBox()
+        vbox.add(ca)
+        vbox.add(button_box)
+
+        self.add(vbox)        
+
         self.show_all()
 
     def main(self):
