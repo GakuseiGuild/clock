@@ -32,18 +32,16 @@ def run_clock(clk, cycle):
 
 def run_long_hand(clk, cycle, pin):
     motor = stepmotor.stepmotor(pin) 
-    hand_dir = 0.0
     while True:
         if clk.run_flag:
-            hand_dir = angle.wrap_to_2pi(hand_dir + motor.execute(clk.vel().long, cycle))
+            hand_dir = angle.wrap_to_2pi(clk.dir().long + motor.execute(clk.vel().long, cycle))
             clk.set_long_dir(hand_dir)
 
 
 def run_short_hand(clk, cycle, pin):
     motor = stepmotor.stepmotor(pin) 
-    hand_dir = 0.0
     while True:
         if clk.run_flag:
-            hand_dir = angle.wrap_to_2pi(hand_dir + motor.execute(clk.vel().short, cycle))
+            hand_dir = angle.wrap_to_2pi(clk.dir().short + motor.execute(clk.vel().short, cycle))
             clk.set_short_dir(hand_dir)
 
