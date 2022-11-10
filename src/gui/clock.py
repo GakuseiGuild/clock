@@ -129,6 +129,20 @@ class Window(Gtk.Window):
         button_toggle_run.set_label('Toggle run')
         button_toggle_run.connect('clicked', toggle_run)
 
+        def num1(widget, data=None):
+            clk.button_1_clicked = True
+        button_1 = Gtk.Button()
+        button_1.set_label('1')
+        button_1.connect('clicked', num1) 
+        def num2(widget, data=None):
+            clk.button_2_clicked = True
+        button_2 = Gtk.Button()
+        button_2.set_label('2')
+        button_2.connect('clicked', num2) 
+        button_num_box = Gtk.HBox()
+        button_num_box.add(button_1)
+        button_num_box.add(button_2)
+
         def tune_long_left(widget, data=None):
             if not clk.run_flag:
                 clk.tune_long_left()
@@ -157,6 +171,7 @@ class Window(Gtk.Window):
         button_box = Gtk.VBox()
         button_box.add(button_change_action)
         button_box.add(button_toggle_run)
+        button_box.add(button_num_box)
         tune_long_box = Gtk.HBox()
         tune_long_box.add(button_tune_long_left)
         tune_long_box.add(button_tune_long_right)

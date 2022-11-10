@@ -22,19 +22,24 @@ class Fes3m33s(base.Base):
             margin = 0.01
             start_dir_long = math.pi / 2.0
             start_dir_short = math.pi / 2.0
-            if abs(self._clk.dir().long - start_dir_long) < margin and abs(self._clk.dir().short - start_dir_short) < margin:
+            if self._clk.button_1_clicked and abs(angle.wrap_to_pi(self._clk.dir().long - start_dir_long)) < margin and abs(angle.wrap_to_pi(self._clk.dir().short - start_dir_short)) < margin:
                 self.__state = 1
             self._clk.set_dial_name("20%.png")
             self._clk.set_target_dir(long=start_dir_long, short=start_dir_short)
         elif self.__state == 1:
             # カウント
-            if time.time() - self.__changed_time > 250.0:
+            count_sec = 213.0
+            if time.time() - self.__changed_time > count_sec:
                 self.__state = 0
             self._clk.set_dial_name("20%.png")
-            target_dir = -(time.time() - self.__changed_time) * 2.0 * math.pi / 213.0 + math.pi / 2.0
-            self._clk.set_target_dir(long=target_dir, short=target_dir)
+            target_dir_long = -(time.time() - self.__changed_time) * 2.0 * math.pi / count_sec + math.pi / 2.0
+            target_dir_short = -(time.time() - self.__changed_time) * 2.0 * math.pi / 60.0 + math.pi / 2.0
+            self._clk.set_target_dir(long=target_dir_long, short=target_dir_short)
         else:
             self.__state = 0
+
+        self._clk.button_1_clicked = False
+        self._clk.button_2_clicked = False
 
         # state が変わっていたら時刻を記録
         if self.__state != state:

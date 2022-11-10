@@ -20,6 +20,8 @@ class Clock():
     def __init__(self, cycle):
         # 制御を進行するか
         self.run_flag = False
+        self.button_1_clicked = False
+        self.button_2_clicked = False
         # 制御周期
         self.__cycle = cycle
         # 加速度制限 [rad/s^2]
